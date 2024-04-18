@@ -39,7 +39,7 @@ func NewServer(ctx context.Context, config *Config) (*Broker, error) {
 	return broker, nil
 }
 
-func (n *Broker) Start(binder func(s Server, r *mux.Router)) {
+func (b *Broker) Start(binder func(s Server, r *mux.Router)) {
 	b.router = mux.NewRouter()
 	binder(b, b.router)
 	handler := cors.Default().Handler(b.router)

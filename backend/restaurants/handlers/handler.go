@@ -9,7 +9,7 @@ import (
 
 type HomeResponse struct {
 	Message string `json:"message"`
-	Status string `json:"status"`
+	Status bool `json:"status"`
 }
 
 func HomeHandler(s server.Server) http.HandlerFunc {

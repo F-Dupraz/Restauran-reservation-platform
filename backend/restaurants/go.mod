@@ -1,6 +1,6 @@
 module github.com/F-Dupraz/Restauran-reservation-platform.git
 
-go 1.22.2
+go 1.20
 
 require (
 	github.com/gorilla/mux v1.8.1 // indirect

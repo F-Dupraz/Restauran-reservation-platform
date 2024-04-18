@@ -14,7 +14,7 @@ import (
 )
 
 func BindRoutes(s server.Server, r *mux.Router) {
-	r.HandleFunc("/", handlers.HomeHandler(s)).Method(http.MethodGet)
+	r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
 }
 
 func main() {
