@@ -4,21 +4,58 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/segmentio/ksuid"
+
+	"github.com/F-Dupraz/Restauran-reservation-platform.git/models"
+	"github.com/F-Dupraz/Restauran-reservation-platform.git/repository"
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/server"
 )
 
-type HomeResponse struct {
-	Message string `json:"message"`
-	Status bool `json:"status"`
+type InsterNewRestraurantRequest struct {
+	Id string `json:"id"`
+	Name string `json:"name"`
+	City string `json:"city"`
+	Owner string `json:"owner"`
+	DaysOpen []string `json:"days_open:"`
+	Specialties []string `json:"specialties"`
 }
 
-func HomeHandler(s server.Server) http.HandlerFunc {
+type InsterNewRestraurantResponse struct {
+	Success bool `json:"success"`
+	Message string `json:"message"`
+}
+
+func SignUpHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var request = InsterNewRestraurantRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		id, err := ksuid.NewRandom()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		var restaurant = models.Restaurant{
+			Id: id.String(),
+			Name: request.Name,
+			City: request.City,
+			Owner: request.Owner,
+			DaysOpen: request.DaysOpen,
+			Specialties: request.Specialties,
+		}
+		err = repository.InsterNewRestraurant(r.Context(), &restaurant)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(HomeResponse {
-			Message: "Everything is working just fine :)",
-			Status: true,
+		json.NewEncoder(w).Encode(InsterNewRestraurantResponse{
+			Success: true,
+			Message: "Restaurant added successfully ;)"
 		})
+
 	}
 }
