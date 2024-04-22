@@ -9,12 +9,12 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
-	"github.com/F-Dupraz/Restauran-reservation-platform.git/server"
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/handlers"
+	"github.com/F-Dupraz/Restauran-reservation-platform.git/server"
 )
 
 func BindRoutes(s server.Server, r *mux.Router) {
-	r.HandleFunc("/", handlers.HomeHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/", handlers.InsterNewRestraurantHandler(s)).Methods(http.MethodPost)
 }
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 
 	PORT := os.Getenv("RESTAURANT_PORT")
 
-	s, err := server.NewServer(context.Background(), &server.Config {
+	s, err := server.NewServer(context.Background(), &server.Config{
 		Port: PORT,
 	})
 

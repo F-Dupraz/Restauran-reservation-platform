@@ -7,9 +7,9 @@ import (
 )
 
 type RestaurantRepository interface {
-	InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error 
+	InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error
 	GetRestaurantByName(ctx context.Context, name string) ([]*models.Restaurant, error)
-	GetRestaurantNyCity(ctx context.Context, city string) ([]*models.Restaurant, error)
+	GetRestaurantByCity(ctx context.Context, city string) ([]*models.Restaurant, error)
 	UpdateRestaurant(ctx context.Context, id string) error
 	DeleteRestaurant(ctx context.Context, id string) error
 	Close() error
@@ -29,8 +29,8 @@ func GetRestaurantByName(ctx context.Context, name string) ([]*models.Restaurant
 	return restaurantImplementation.GetRestaurantByName(ctx, name)
 }
 
-func GetRestaurantNyCity(ctx context.Context, city string) ([]*models.Restaurant, error) {
-	return restaurantImplementation.GetRestaurantNyCity(ctx, city)
+func GetRestaurantByCity(ctx context.Context, city string) ([]*models.Restaurant, error) {
+	return restaurantImplementation.GetRestaurantByCity(ctx, city)
 }
 
 func UpdateRestaurant(ctx context.Context, id string) error {

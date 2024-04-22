@@ -12,20 +12,41 @@ import (
 )
 
 type InsterNewRestraurantRequest struct {
-	Id string `json:"id"`
-	Name string `json:"name"`
-	City string `json:"city"`
-	Owner string `json:"owner"`
-	DaysOpen []string `json:"days_open:"`
+	Id          string   `json:"id"`
+	Name        string   `json:"name"`
+	City        string   `json:"city"`
+	Owner       string   `json:"owner"`
+	DaysOpen    []string `json:"days_open:"`
 	Specialties []string `json:"specialties"`
 }
 
 type InsterNewRestraurantResponse struct {
-	Success bool `json:"success"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
-func SignUpHandler(s server.Server) http.HandlerFunc {
+type GetRestaurantByNameRequest struct {
+	Name string `json:"name"`
+}
+
+type GetRestaurantByCityRequest struct {
+	City string `json:"city"`
+}
+
+type GetRestaurantByNameOrCityResponse struct {
+	Restaurants []*models.Restaurant `json:"restaurants"`
+}
+
+type DeleteRestaurantRequest struct {
+	Id string `json:"id"`
+}
+
+type DeleteRestaurantResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request = InsterNewRestraurantRequest{}
 		err := json.NewDecoder(r.Body).Decode(&request)
@@ -39,11 +60,11 @@ func SignUpHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		var restaurant = models.Restaurant{
-			Id: id.String(),
-			Name: request.Name,
-			City: request.City,
-			Owner: request.Owner,
-			DaysOpen: request.DaysOpen,
+			Id:          id.String(),
+			Name:        request.Name,
+			City:        request.City,
+			Owner:       request.Owner,
+			DaysOpen:    request.DaysOpen,
 			Specialties: request.Specialties,
 		}
 		err = repository.InsterNewRestraurant(r.Context(), &restaurant)
@@ -54,8 +75,74 @@ func SignUpHandler(s server.Server) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(InsterNewRestraurantResponse{
 			Success: true,
-			Message: "Restaurant added successfully ;)"
+			Message: "Restaurant added successfully ;)",
 		})
 
+	}
+}
+
+func GetRestaurantByNameHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var request = GetRestaurantByNameRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		var name = request.Name
+		restaurants, err := repository.GetRestaurantByName(r.Context(), name)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(GetRestaurantByNameOrCityResponse{
+			Restaurants: restaurants,
+		})
+
+	}
+}
+
+func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var request = GetRestaurantByCityRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		var city = request.City
+		restaurants, err := repository.GetRestaurantByCity(r.Context(), city)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(GetRestaurantByNameOrCityResponse{
+			Restaurants: restaurants,
+		})
+
+	}
+}
+
+func DeleteRestaurantHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var request = DeleteRestaurantRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		var id = request.Id
+		err = repository.DeleteRestaurant(r.Context(), id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(DeleteRestaurantResponse{
+			Success: true,
+			Message: "Restaurant deleted successfully ;)",
+		})
 	}
 }
