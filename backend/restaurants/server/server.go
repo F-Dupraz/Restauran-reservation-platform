@@ -6,12 +6,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/F-Dupraz/Restauran-reservation-platform.git/database"
+	"github.com/F-Dupraz/Restauran-reservation-platform.git/repository"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
 
 type Config struct {
-	Port string
+	Port        string
+	DatabaseURL string
 }
 
 type Server interface {
@@ -29,7 +32,10 @@ func (b *Broker) Config() *Config {
 
 func NewServer(ctx context.Context, config *Config) (*Broker, error) {
 	if config.Port == "" {
-		return nil, errors.New("Port is required!")
+		return nil, errors.New("port is required")
+	}
+	if config.DatabaseURL == "" {
+		return nil, errors.New("database url is required")
 	}
 
 	broker := &Broker{
@@ -43,6 +49,11 @@ func (b *Broker) Start(binder func(s Server, r *mux.Router)) {
 	b.router = mux.NewRouter()
 	binder(b, b.router)
 	handler := cors.Default().Handler(b.router)
+	repo, err := database.NewMyPostgresRepo(b.config.DatabaseURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+	repository.SetRepository(repo)
 	log.Println("Starting server on port", b.config.Port)
 	if err := http.ListenAndServe(b.config.Port, handler); err != nil {
 		log.Println("Error starting server:", err)

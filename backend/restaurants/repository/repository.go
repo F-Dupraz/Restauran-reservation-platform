@@ -8,9 +8,9 @@ import (
 
 type RestaurantRepository interface {
 	InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error
-	GetRestaurantByName(ctx context.Context, name string) ([]*models.Restaurant, error)
-	GetRestaurantByCity(ctx context.Context, city string) ([]*models.Restaurant, error)
-	UpdateRestaurant(ctx context.Context, id string) error
+	GetRestaurantByName(ctx context.Context, name string) ([]models.Restaurant, error)
+	GetRestaurantByCity(ctx context.Context, city string) ([]models.Restaurant, error)
+	// UpdateRestaurant(ctx context.Context, id string) error
 	DeleteRestaurant(ctx context.Context, id string) error
 	Close() error
 }
@@ -25,17 +25,17 @@ func InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) er
 	return restaurantImplementation.InsterNewRestraurant(ctx, restaurant)
 }
 
-func GetRestaurantByName(ctx context.Context, name string) ([]*models.Restaurant, error) {
+func GetRestaurantByName(ctx context.Context, name string) ([]models.Restaurant, error) {
 	return restaurantImplementation.GetRestaurantByName(ctx, name)
 }
 
-func GetRestaurantByCity(ctx context.Context, city string) ([]*models.Restaurant, error) {
+func GetRestaurantByCity(ctx context.Context, city string) ([]models.Restaurant, error) {
 	return restaurantImplementation.GetRestaurantByCity(ctx, city)
 }
 
-func UpdateRestaurant(ctx context.Context, id string) error {
-	return restaurantImplementation.UpdateRestaurant(ctx, id)
-}
+// func UpdateRestaurant(ctx context.Context, id string) error {
+// 	return restaurantImplementation.UpdateRestaurant(ctx, id)
+// }
 
 func DeleteRestaurant(ctx context.Context, id string) error {
 	return restaurantImplementation.DeleteRestaurant(ctx, id)

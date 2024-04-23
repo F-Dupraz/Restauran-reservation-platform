@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
 
 	_ "github.com/lib/pq"
 
@@ -33,17 +32,10 @@ func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant
 }
 
 func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string) ([]models.Restaurant, error) {
-	rows, err := repo.db.ExecContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1", name)
+	_, err := repo.db.ExecContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1", name)
 	if err != nil {
 		return nil, err
 	}
-
-	defer func() {
-		err = rows.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
 
 	var restaurants = []models.Restaurant{}
 
@@ -63,17 +55,10 @@ func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string
 }
 
 func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string) ([]models.Restaurant, error) {
-	rows, err := repo.db.ExecContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1", city)
+	_, err := repo.db.ExecContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1", city)
 	if err != nil {
 		return nil, err
 	}
-
-	defer func() {
-		err = rows.Close()
-		if err != nil {
-			log.Fatal(err)
-		}
-	}()
 
 	var restaurants = []models.Restaurant{}
 

@@ -34,7 +34,7 @@ type GetRestaurantByCityRequest struct {
 }
 
 type GetRestaurantByNameOrCityResponse struct {
-	Restaurants []*models.Restaurant `json:"restaurants"`
+	Restaurants []models.Restaurant `json:"restaurants"`
 }
 
 type DeleteRestaurantRequest struct {

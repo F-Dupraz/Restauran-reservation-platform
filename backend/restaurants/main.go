@@ -14,7 +14,10 @@ import (
 )
 
 func BindRoutes(s server.Server, r *mux.Router) {
-	r.HandleFunc("/", handlers.InsterNewRestraurantHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/restaurants", handlers.InsterNewRestraurantHandler(s)).Methods(http.MethodPost)
+	r.HandleFunc("/restaurants", handlers.GetRestaurantByNameHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/restaurants", handlers.DeleteRestaurantHandler(s)).Methods(http.MethodDelete)
+	r.HandleFunc("/restaurants/city", handlers.GetRestaurantByCityHandler(s)).Methods(http.MethodGet)
 }
 
 func main() {
@@ -24,9 +27,11 @@ func main() {
 	}
 
 	PORT := os.Getenv("RESTAURANT_PORT")
+	DATABASE_URL := os.Getenv("DATABASE_URL")
 
 	s, err := server.NewServer(context.Background(), &server.Config{
-		Port: PORT,
+		Port:        PORT,
+		DatabaseURL: DATABASE_URL,
 	})
 
 	if err != nil {
