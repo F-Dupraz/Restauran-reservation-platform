@@ -4,9 +4,10 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/models"
-	_ "github.com/lib/pq"
+	"github.com/lib/pq"
 )
 
 type MyPostgresRepo struct {
@@ -27,54 +28,100 @@ func (repo *MyPostgresRepo) Close() error {
 }
 
 func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error {
-	_, err := repo.db.ExecContext(ctx, "INSERT INTO restaurants (name, city, owner, days_open, specialties) VALUES ($1, $2, $3, $4, $5)", restaurant.Name, restaurant.City, restaurant.Owner, restaurant.DaysOpen, restaurant.Specialties)
+	DaysOpen := pq.Array(restaurant.DaysOpen)
+	fmt.Println(DaysOpen)
+	Specialties := pq.Array(restaurant.Specialties)
+	fmt.Println(Specialties)
+	_, err := repo.db.ExecContext(ctx, "INSERT INTO restaurants (id, name, city, owner, days_open, specialties) VALUES ($1, $2, $3, $4, $5, $6)", restaurant.Id, restaurant.Name, restaurant.City, restaurant.Owner, DaysOpen, Specialties)
 	return err
 }
 
 func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string) ([]models.Restaurant, error) {
-	_, err := repo.db.ExecContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1", name)
+	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1;", strings.ToLower(name))
 	if err != nil {
 		return nil, err
 	}
 
 	var restaurants = []models.Restaurant{}
 
+	for rows.Next() {
+		var restaurant = models.Restaurant{}
+		var res_name string
+		var res_city string
+		var res_days sql.NullString
+		var res_spec sql.NullString
+
+		err = rows.Scan(&res_name, &res_city, &res_days, &res_spec)
+		if err != nil {
+			return nil, err
+		}
+
+		restaurant.Name = res_name
+		restaurant.City = res_city
+
+		var res_days_stringified = res_days.String
+		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
+		res_days_stringified = strings.Replace(res_days_stringified, "}", "", -1)
+		restaurant.DaysOpen = strings.Split(res_days_stringified, ",")
+
+		var res_spec_stringified = res_spec.String
+		res_spec_stringified = strings.Replace(res_spec.String, "{", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "}", "", -1)
+		restaurant.Specialties = strings.Split(res_spec_stringified, ",")
+
+		restaurants = append(restaurants, restaurant)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
 	fmt.Println(restaurants)
 
 	return restaurants, nil
-
-	// for rows.Next() {
-	// 	if err = rows.Scan(&restaurants.Name, &restaurants.City, &restaurants.DaysOpen, &restaurants.Specialties); err == nil {
-	// 		return &restaurants, nil
-	// 	}
-	// }
-	// if err = rows.Err(); err != nil {
-	// 	return nil, err
-	// }
-	// return &restaurants, nil
 }
 
 func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string) ([]models.Restaurant, error) {
-	_, err := repo.db.ExecContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1", city)
+	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1", strings.ToLower(city))
 	if err != nil {
 		return nil, err
 	}
 
 	var restaurants = []models.Restaurant{}
 
+	for rows.Next() {
+		var restaurant = models.Restaurant{}
+		var res_name string
+		var res_city string
+		var res_days sql.NullString
+		var res_spec sql.NullString
+
+		err = rows.Scan(&res_name, &res_city, &res_days, &res_spec)
+		if err != nil {
+			return nil, err
+		}
+
+		restaurant.Name = res_name
+		restaurant.City = res_city
+
+		var res_days_stringified = res_days.String
+		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
+		res_days_stringified = strings.Replace(res_days_stringified, "}", "", -1)
+		restaurant.DaysOpen = strings.Split(res_days_stringified, ",")
+
+		var res_spec_stringified = res_spec.String
+		res_spec_stringified = strings.Replace(res_spec.String, "{", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "}", "", -1)
+		restaurant.Specialties = strings.Split(res_spec_stringified, ",")
+
+		restaurants = append(restaurants, restaurant)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
 	fmt.Println(restaurants)
 
 	return restaurants, nil
-
-	// for rows.Next() {
-	// 	if err = rows.Scan(&restaurants.Name, &restaurants.City, &restaurants.DaysOpen, &restaurants.Specialties); err == nil {
-	// 		return &restaurants, nil
-	// 	}
-	// }
-	// if err = rows.Err(); err != nil {
-	// 	return nil, err
-	// }
-	// return &restaurants, nil
 }
 
 // -------------------- TERMINAR -------------------- //

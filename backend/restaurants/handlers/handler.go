@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/segmentio/ksuid"
 
@@ -16,7 +17,7 @@ type InsterNewRestraurantRequest struct {
 	Name        string   `json:"name"`
 	City        string   `json:"city"`
 	Owner       string   `json:"owner"`
-	DaysOpen    []string `json:"days_open:"`
+	DaysOpen    []string `json:"days_open"`
 	Specialties []string `json:"specialties"`
 }
 
@@ -61,9 +62,9 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 		}
 		var restaurant = models.Restaurant{
 			Id:          id.String(),
-			Name:        request.Name,
-			City:        request.City,
-			Owner:       request.Owner,
+			Name:        strings.ToLower(request.Name),
+			City:        strings.ToLower(request.City),
+			Owner:       strings.ToLower(request.Owner),
 			DaysOpen:    request.DaysOpen,
 			Specialties: request.Specialties,
 		}
