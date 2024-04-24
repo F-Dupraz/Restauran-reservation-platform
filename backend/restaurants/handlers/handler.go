@@ -34,7 +34,7 @@ type GetRestaurantByCityRequest struct {
 	City string `json:"city"`
 }
 
-type GetRestaurantByNameOrCityResponse struct {
+type GetRestaurantsResponse struct {
 	Restaurants []models.Restaurant `json:"restaurants"`
 }
 
@@ -82,6 +82,20 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 	}
 }
 
+func GetAllRestaurants(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		restaurants, err := repository.GetAllRestaurants(r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(GetRestaurantsResponse{
+			Restaurants: restaurants,
+		})
+	}
+}
+
 func GetRestaurantByNameHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var request = GetRestaurantByNameRequest{}
@@ -97,7 +111,7 @@ func GetRestaurantByNameHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(GetRestaurantByNameOrCityResponse{
+		json.NewEncoder(w).Encode(GetRestaurantsResponse{
 			Restaurants: restaurants,
 		})
 
@@ -119,7 +133,7 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(GetRestaurantByNameOrCityResponse{
+		json.NewEncoder(w).Encode(GetRestaurantsResponse{
 			Restaurants: restaurants,
 		})
 

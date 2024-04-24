@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/models"
@@ -36,11 +37,69 @@ func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant
 	return err
 }
 
+func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context) ([]models.Restaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants;")
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var restaurants = []models.Restaurant{}
+
+	for rows.Next() {
+		var restaurant = models.Restaurant{}
+		var res_name string
+		var res_city string
+		var res_days sql.NullString
+		var res_spec sql.NullString
+
+		err = rows.Scan(&res_name, &res_city, &res_days, &res_spec)
+		if err != nil {
+			return nil, err
+		}
+
+		restaurant.Name = res_name
+		restaurant.City = res_city
+
+		var res_days_stringified = res_days.String
+		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
+		res_days_stringified = strings.Replace(res_days_stringified, "}", "", -1)
+		restaurant.DaysOpen = strings.Split(res_days_stringified, ",")
+
+		var res_spec_stringified = res_spec.String
+		res_spec_stringified = strings.Replace(res_spec.String, "{", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "}", "", -1)
+		restaurant.Specialties = strings.Split(res_spec_stringified, ",")
+
+		restaurants = append(restaurants, restaurant)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	fmt.Println(restaurants)
+
+	return restaurants, nil
+}
+
 func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string) ([]models.Restaurant, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1;", strings.ToLower(name))
 	if err != nil {
 		return nil, err
 	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	var restaurants = []models.Restaurant{}
 
@@ -85,6 +144,13 @@ func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string
 	if err != nil {
 		return nil, err
 	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	var restaurants = []models.Restaurant{}
 
