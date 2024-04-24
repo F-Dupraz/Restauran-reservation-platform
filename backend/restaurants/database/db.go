@@ -5,9 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/lib/pq"
-
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/models"
+	_ "github.com/lib/pq"
 )
 
 type MyPostgresRepo struct {
@@ -19,6 +18,7 @@ func NewMyPostgresRepo(url string) (*MyPostgresRepo, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return &MyPostgresRepo{db}, nil
 }
 
