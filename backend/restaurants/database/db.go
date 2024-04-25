@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"strings"
 
@@ -30,15 +29,13 @@ func (repo *MyPostgresRepo) Close() error {
 
 func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error {
 	DaysOpen := pq.Array(restaurant.DaysOpen)
-	fmt.Println(DaysOpen)
 	Specialties := pq.Array(restaurant.Specialties)
-	fmt.Println(Specialties)
 	_, err := repo.db.ExecContext(ctx, "INSERT INTO restaurants (id, name, city, owner, days_open, specialties) VALUES ($1, $2, $3, $4, $5, $6)", restaurant.Id, restaurant.Name, restaurant.City, restaurant.Owner, DaysOpen, Specialties)
 	return err
 }
 
-func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants;")
+func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
 	if err != nil {
 		return nil, err
 	}
@@ -82,14 +79,12 @@ func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context) ([]models.Res
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-
-	fmt.Println(restaurants)
 
 	return restaurants, nil
 }
 
-func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1;", strings.ToLower(name))
+func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string, offset int) ([]models.Restaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(name), offset)
 	if err != nil {
 		return nil, err
 	}
@@ -133,14 +128,12 @@ func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-
-	fmt.Println(restaurants)
 
 	return restaurants, nil
 }
 
-func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1", strings.ToLower(city))
+func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string, offset int) ([]models.Restaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(city), offset)
 	if err != nil {
 		return nil, err
 	}
@@ -184,8 +177,6 @@ func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
-
-	fmt.Println(restaurants)
 
 	return restaurants, nil
 }
@@ -197,7 +188,7 @@ func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string
 // 	return err
 // }
 
-func (repo *MyPostgresRepo) DeleteRestaurant(ctx context.Context, id string) error {
-	_, err := repo.db.ExecContext(ctx, "DELETE FROM restaurants WHERE id = $1", id)
-	return err
-}
+// func (repo *MyPostgresRepo) DeleteRestaurant(ctx context.Context, id string) error {
+// 	_, err := repo.db.ExecContext(ctx, "DELETE FROM restaurants WHERE id = $1", id)
+// 	return err
+// }

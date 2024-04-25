@@ -14,11 +14,11 @@ import (
 )
 
 func BindRoutes(s server.Server, r *mux.Router) {
-	r.HandleFunc("/restaurants", handlers.InsterNewRestraurantHandler(s)).Methods(http.MethodPost)
-	r.HandleFunc("/restaurants", handlers.DeleteRestaurantHandler(s)).Methods(http.MethodDelete)
-	r.HandleFunc("/restaurants", handlers.GetAllRestaurants(s)).Methods(http.MethodGet)
-	r.HandleFunc("/restaurants/name", handlers.GetRestaurantByNameHandler(s)).Methods(http.MethodGet)
-	r.HandleFunc("/restaurants/city", handlers.GetRestaurantByCityHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/api/restaurants", handlers.InsterNewRestraurantHandler(s)).Methods(http.MethodPost)
+	// r.HandleFunc("/api/restaurants", handlers.DeleteRestaurantHandler(s)).Methods(http.MethodDelete)
+	r.HandleFunc("/api/restaurants", handlers.GetAllRestaurants(s)).Methods(http.MethodGet)
+	r.HandleFunc("/api/restaurants/name", handlers.GetRestaurantByNameHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/api/restaurants/city", handlers.GetRestaurantByCityHandler(s)).Methods(http.MethodGet)
 }
 
 func main() {

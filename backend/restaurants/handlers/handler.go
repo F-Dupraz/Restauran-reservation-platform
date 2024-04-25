@@ -26,26 +26,32 @@ type InsterNewRestraurantResponse struct {
 	Message string `json:"message"`
 }
 
+type GetAllRestaurantRequest struct {
+	Offset int `json:"offset"`
+}
+
 type GetRestaurantByNameRequest struct {
-	Name string `json:"name"`
+	Offset int    `json:"offset"`
+	Name   string `json:"name"`
 }
 
 type GetRestaurantByCityRequest struct {
-	City string `json:"city"`
+	Offset int    `json:"offset"`
+	City   string `json:"city"`
 }
 
 type GetRestaurantsResponse struct {
 	Restaurants []models.Restaurant `json:"restaurants"`
 }
 
-type DeleteRestaurantRequest struct {
-	Id string `json:"id"`
-}
+// type DeleteRestaurantRequest struct {
+// 	Id string `json:"id"`
+// }
 
-type DeleteRestaurantResponse struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-}
+// type DeleteRestaurantResponse struct {
+// 	Success bool   `json:"success"`
+// 	Message string `json:"message"`
+// }
 
 func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -84,7 +90,14 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 
 func GetAllRestaurants(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		restaurants, err := repository.GetAllRestaurants(r.Context())
+		var request = GetAllRestaurantRequest{}
+		err := json.NewDecoder(r.Body).Decode(&request)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		var offset = request.Offset
+		restaurants, err := repository.GetAllRestaurants(r.Context(), offset)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -105,7 +118,8 @@ func GetRestaurantByNameHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		var name = request.Name
-		restaurants, err := repository.GetRestaurantByName(r.Context(), name)
+		var offset = request.Offset
+		restaurants, err := repository.GetRestaurantByName(r.Context(), name, offset)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -127,7 +141,8 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		var city = request.City
-		restaurants, err := repository.GetRestaurantByCity(r.Context(), city)
+		var offset = request.Offset
+		restaurants, err := repository.GetRestaurantByCity(r.Context(), city, offset)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -140,24 +155,24 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 	}
 }
 
-func DeleteRestaurantHandler(s server.Server) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var request = DeleteRestaurantRequest{}
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		var id = request.Id
-		err = repository.DeleteRestaurant(r.Context(), id)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(DeleteRestaurantResponse{
-			Success: true,
-			Message: "Restaurant deleted successfully ;)",
-		})
-	}
-}
+// func DeleteRestaurantHandler(s server.Server) http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		var request = DeleteRestaurantRequest{}
+// 		err := json.NewDecoder(r.Body).Decode(&request)
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusBadRequest)
+// 			return
+// 		}
+// 		var id = request.Id
+// 		err = repository.DeleteRestaurant(r.Context(), id)
+// 		if err != nil {
+// 			http.Error(w, err.Error(), http.StatusInternalServerError)
+// 			return
+// 		}
+// 		w.Header().Set("Content-Type", "application/json")
+// 		json.NewEncoder(w).Encode(DeleteRestaurantResponse{
+// 			Success: true,
+// 			Message: "Restaurant deleted successfully ;)",
+// 		})
+// 	}
+// }
