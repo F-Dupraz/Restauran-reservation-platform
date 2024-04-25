@@ -79,6 +79,7 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusCreated)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(InsterNewRestraurantResponse{
 			Success: true,
@@ -102,6 +103,7 @@ func GetAllRestaurants(s server.Server) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(GetRestaurantsResponse{
 			Restaurants: restaurants,
@@ -124,6 +126,7 @@ func GetRestaurantByNameHandler(s server.Server) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(GetRestaurantsResponse{
 			Restaurants: restaurants,
@@ -147,6 +150,7 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(GetRestaurantsResponse{
 			Restaurants: restaurants,
