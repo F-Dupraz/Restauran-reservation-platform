@@ -1,0 +1,28 @@
+{
+  "name": "restauran-reservation-platform",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/F-Dupraz/Restauran-reservation-platform.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/F-Dupraz/Restauran-reservation-platform/issues"
+  },
+  "homepage": "https://github.com/F-Dupraz/Restauran-reservation-platform#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "pg": "^8.11.5",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2"
+  },
+  "description": ""
+}
