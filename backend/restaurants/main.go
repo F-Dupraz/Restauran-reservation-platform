@@ -15,7 +15,7 @@ import (
 
 func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/api/restaurants", handlers.InsterNewRestraurantHandler(s)).Methods(http.MethodPost)
-	// r.HandleFunc("/api/restaurants", handlers.DeleteRestaurantHandler(s)).Methods(http.MethodDelete)
+	r.HandleFunc("/api/restaurants", handlers.DeleteRestaurantHandler(s)).Methods(http.MethodDelete)
 	r.HandleFunc("/api/restaurants", handlers.GetAllRestaurants(s)).Methods(http.MethodGet)
 	r.HandleFunc("/api/restaurants/name", handlers.GetRestaurantByNameHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/api/restaurants/city", handlers.GetRestaurantByCityHandler(s)).Methods(http.MethodGet)
@@ -29,9 +29,11 @@ func main() {
 
 	PORT := os.Getenv("RESTAURANT_PORT")
 	DATABASE_URL := os.Getenv("DATABASE_URL")
+	JWT_TOKEN := os.Getenv("JWT_TOKEN")
 
 	s, err := server.NewServer(context.Background(), &server.Config{
 		Port:        PORT,
+		JWTSecret:   JWT_TOKEN,
 		DatabaseURL: DATABASE_URL,
 	})
 

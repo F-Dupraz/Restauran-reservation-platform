@@ -35,7 +35,7 @@ func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant
 }
 
 func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, days_open, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
 	if err != nil {
 		return nil, err
 	}
@@ -51,18 +51,22 @@ func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) (
 
 	for rows.Next() {
 		var restaurant = models.Restaurant{}
+		var res_id string
 		var res_name string
 		var res_city string
+		var res_owner string
 		var res_days sql.NullString
 		var res_spec sql.NullString
 
-		err = rows.Scan(&res_name, &res_city, &res_days, &res_spec)
+		err = rows.Scan(&res_id, &res_name, &res_city, &res_owner, &res_days, &res_spec)
 		if err != nil {
 			return nil, err
 		}
 
+		restaurant.Id = res_id
 		restaurant.Name = res_name
 		restaurant.City = res_city
+		restaurant.Owner = res_owner
 
 		var res_days_stringified = res_days.String
 		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
@@ -84,7 +88,7 @@ func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) (
 }
 
 func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string, offset int) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE name = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(name), offset)
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, days_open, specialties FROM restaurants WHERE name = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(name), offset)
 	if err != nil {
 		return nil, err
 	}
@@ -100,18 +104,22 @@ func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string
 
 	for rows.Next() {
 		var restaurant = models.Restaurant{}
+		var res_id string
 		var res_name string
 		var res_city string
+		var res_owner string
 		var res_days sql.NullString
 		var res_spec sql.NullString
 
-		err = rows.Scan(&res_name, &res_city, &res_days, &res_spec)
+		err = rows.Scan(&res_id, &res_name, &res_city, &res_owner, &res_days, &res_spec)
 		if err != nil {
 			return nil, err
 		}
 
+		restaurant.Id = res_id
 		restaurant.Name = res_name
 		restaurant.City = res_city
+		restaurant.Owner = res_owner
 
 		var res_days_stringified = res_days.String
 		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
@@ -133,7 +141,7 @@ func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string
 }
 
 func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string, offset int) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT name, city, days_open, specialties FROM restaurants WHERE city = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(city), offset)
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, days_open, specialties FROM restaurants WHERE city = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(city), offset)
 	if err != nil {
 		return nil, err
 	}
@@ -149,18 +157,22 @@ func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string
 
 	for rows.Next() {
 		var restaurant = models.Restaurant{}
+		var res_id string
 		var res_name string
 		var res_city string
+		var res_owner string
 		var res_days sql.NullString
 		var res_spec sql.NullString
 
-		err = rows.Scan(&res_name, &res_city, &res_days, &res_spec)
+		err = rows.Scan(&res_id, &res_name, &res_city, &res_owner, &res_days, &res_spec)
 		if err != nil {
 			return nil, err
 		}
 
+		restaurant.Id = res_id
 		restaurant.Name = res_name
 		restaurant.City = res_city
+		restaurant.Owner = res_owner
 
 		var res_days_stringified = res_days.String
 		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
@@ -188,7 +200,7 @@ func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string
 // 	return err
 // }
 
-// func (repo *MyPostgresRepo) DeleteRestaurant(ctx context.Context, id string) error {
-// 	_, err := repo.db.ExecContext(ctx, "DELETE FROM restaurants WHERE id = $1", id)
-// 	return err
-// }
+func (repo *MyPostgresRepo) DeleteRestaurant(ctx context.Context, id string, user_id string) error {
+	_, err := repo.db.ExecContext(ctx, "DELETE FROM restaurants WHERE id = $1 AND owner = $2", id, user_id)
+	return err
+}

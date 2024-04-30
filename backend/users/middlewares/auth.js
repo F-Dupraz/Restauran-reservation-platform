@@ -30,7 +30,7 @@ const authenticate = (options) => async (req, res, next) => {
     const payload = await verifyToken(req)
 
     const username = payload.username
-    const user = await pool.query("SELECT username, owner_of FROM users WHERE username = $1", [username])
+    const user = await pool.query("SELECT id, username FROM users WHERE username = $1", [username])
 
     if (!user) {
       throw new Error('Invalid token')

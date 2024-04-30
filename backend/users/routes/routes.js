@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
-    const user = await pool.query("SELECT email, username, password FROM users WHERE email = $1;", [email])
+    const user = await pool.query("SELECT id, email, username, password FROM users WHERE email = $1;", [email])
     if (!user) {
       return res.status(400).json({
         error: "Username is incorrect",
@@ -42,13 +42,13 @@ router.post("/login", async (req, res) => {
       })
     }
 
-    const token = await new SignJWT({ id: user.id, username: user.username })
+    const token = await new SignJWT({ id: user.rows[0].id, username: user.rows[0].username })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("2h")
         .sign(new TextEncoder().encode(process.env.JWT_TOKEN))
 
-    return res.status(200).json({ token: token, username: user.username })
+    return res.status(200).json({ username: user.rows[0].username, token: token, })
   } catch (err) {
     return res.status(500).json({
       "message": "An unexpected error happened. Please try again later",
@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const users = await pool.query("SELECT username, email, owner_of FROM users;")
+    const users = await pool.query("SELECT id, username, email, owner_of FROM users;")
     res.status(200).json(users.rows)
   } catch(err) {
     res.status(500).json(err)
@@ -69,7 +69,7 @@ router.get("/", async (req, res) => {
 router.get("/username", async (req, res) => {
   try {
     const username = req.body.username
-    const user_by_username = await pool.query("SELECT email, username, owner_of FROM users WHERE username = $1;", [username])
+    const user_by_username = await pool.query("SELECT id, email, username, owner_of FROM users WHERE username = $1;", [username])
     res.status(200).json(user_by_username.rows[0])
   } catch(err) {
     res.status(500).json(err)

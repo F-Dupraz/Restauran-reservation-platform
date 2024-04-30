@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/segmentio/ksuid"
 
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/models"
@@ -44,14 +45,14 @@ type GetRestaurantsResponse struct {
 	Restaurants []models.Restaurant `json:"restaurants"`
 }
 
-// type DeleteRestaurantRequest struct {
-// 	Id string `json:"id"`
-// }
+type DeleteRestaurantRequest struct {
+	Id string `json:"id"`
+}
 
-// type DeleteRestaurantResponse struct {
-// 	Success bool   `json:"success"`
-// 	Message string `json:"message"`
-// }
+type DeleteRestaurantResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
 
 func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -159,24 +160,35 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 	}
 }
 
-// func DeleteRestaurantHandler(s server.Server) http.HandlerFunc {
-// 	return func(w http.ResponseWriter, r *http.Request) {
-// 		var request = DeleteRestaurantRequest{}
-// 		err := json.NewDecoder(r.Body).Decode(&request)
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusBadRequest)
-// 			return
-// 		}
-// 		var id = request.Id
-// 		err = repository.DeleteRestaurant(r.Context(), id)
-// 		if err != nil {
-// 			http.Error(w, err.Error(), http.StatusInternalServerError)
-// 			return
-// 		}
-// 		w.Header().Set("Content-Type", "application/json")
-// 		json.NewEncoder(w).Encode(DeleteRestaurantResponse{
-// 			Success: true,
-// 			Message: "Restaurant deleted successfully ;)",
-// 		})
-// 	}
-// }
+func DeleteRestaurantHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			var request = DeleteRestaurantRequest{}
+			err := json.NewDecoder(r.Body).Decode(&request)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			var id = request.Id
+			var user_id = claims.Id
+			err = repository.DeleteRestaurant(r.Context(), id, user_id)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(DeleteRestaurantResponse{
+				Success: true,
+				Message: "Restaurant deleted successfully ;)",
+			})
+		}
+	}
+}

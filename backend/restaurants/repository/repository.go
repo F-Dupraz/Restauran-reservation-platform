@@ -12,7 +12,7 @@ type RestaurantRepository interface {
 	GetRestaurantByName(ctx context.Context, name string, offset int) ([]models.Restaurant, error)
 	GetRestaurantByCity(ctx context.Context, city string, offset int) ([]models.Restaurant, error)
 	// UpdateRestaurant(ctx context.Context, id string) error
-	// DeleteRestaurant(ctx context.Context, id string) error
+	DeleteRestaurant(ctx context.Context, id string, user_id string) error
 	Close() error
 }
 
@@ -42,9 +42,9 @@ func GetRestaurantByCity(ctx context.Context, city string, offset int) ([]models
 // 	return restaurantImplementation.UpdateRestaurant(ctx, id)
 // }
 
-// func DeleteRestaurant(ctx context.Context, id string) error {
-// 	return restaurantImplementation.DeleteRestaurant(ctx, id)
-// }
+func DeleteRestaurant(ctx context.Context, id string, user_id string) error {
+	return restaurantImplementation.DeleteRestaurant(ctx, id, user_id)
+}
 
 func Close() error {
 	return restaurantImplementation.Close()
