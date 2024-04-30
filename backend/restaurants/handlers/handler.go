@@ -45,6 +45,18 @@ type GetRestaurantsResponse struct {
 	Restaurants []models.Restaurant `json:"restaurants"`
 }
 
+type UpdateRestraurantRequest struct {
+	Id          string   `json:"id"`
+	Name        string   `json:"name"`
+	DaysOpen    []string `json:"days_open"`
+	Specialties []string `json:"specialties"`
+}
+
+type UpdateRestraurantResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
 type DeleteRestaurantRequest struct {
 	Id string `json:"id"`
 }
@@ -157,6 +169,44 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 			Restaurants: restaurants,
 		})
 
+	}
+}
+
+func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			var request = UpdateRestraurantRequest{}
+			err := json.NewDecoder(r.Body).Decode(&request)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			var updated_restaurant = models.Restaurant{
+				Id:          request.Id,
+				Name:        strings.ToLower(request.Name),
+				DaysOpen:    request.DaysOpen,
+				Specialties: request.Specialties,
+			}
+			err = repository.UpdateRestaurant(r.Context(), &updated_restaurant, claims.Id)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(UpdateRestraurantResponse{
+				Success: true,
+				Message: "Restaurant updated successfully ;)",
+			})
+		}
 	}
 }
 

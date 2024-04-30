@@ -193,12 +193,12 @@ func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string
 	return restaurants, nil
 }
 
-// -------------------- TERMINAR -------------------- //
-
-// func (repo *MyPostgresRepo) UpdateRestaurant(ctx context.Context, restaurant_data *models.Restaurant,  id int64) error {
-// 	_, err := repo.db.ExecContext(ctx, "")
-// 	return err
-// }
+func (repo *MyPostgresRepo) UpdateRestaurant(ctx context.Context, restaurant_data *models.Restaurant, user_id string) error {
+	DaysOpen := pq.Array(restaurant_data.DaysOpen)
+	Specialties := pq.Array(restaurant_data.Specialties)
+	_, err := repo.db.ExecContext(ctx, "UPDATE restaurants SET name=$1, days_open=$2, specialties=$3 WHERE id=$4 AND owner=$5;", restaurant_data.Name, DaysOpen, Specialties, restaurant_data.Id, user_id)
+	return err
+}
 
 func (repo *MyPostgresRepo) DeleteRestaurant(ctx context.Context, id string, user_id string) error {
 	_, err := repo.db.ExecContext(ctx, "DELETE FROM restaurants WHERE id = $1 AND owner = $2", id, user_id)
