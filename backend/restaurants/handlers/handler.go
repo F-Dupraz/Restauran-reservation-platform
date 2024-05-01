@@ -17,7 +17,6 @@ type InsterNewRestraurantRequest struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
 	City        string   `json:"city"`
-	Owner       string   `json:"owner"`
 	DaysOpen    []string `json:"days_open"`
 	Specialties []string `json:"specialties"`
 }
@@ -68,37 +67,46 @@ type DeleteRestaurantResponse struct {
 
 func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var request = InsterNewRestraurantRequest{}
-		err := json.NewDecoder(r.Body).Decode(&request)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		id, err := ksuid.NewRandom()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		var restaurant = models.Restaurant{
-			Id:          id.String(),
-			Name:        strings.ToLower(request.Name),
-			City:        strings.ToLower(request.City),
-			Owner:       strings.ToLower(request.Owner),
-			DaysOpen:    request.DaysOpen,
-			Specialties: request.Specialties,
-		}
-		err = repository.InsterNewRestraurant(r.Context(), &restaurant)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusCreated)
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(InsterNewRestraurantResponse{
-			Success: true,
-			Message: "Restaurant added successfully ;)",
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
 		})
-
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			var request = InsterNewRestraurantRequest{}
+			err := json.NewDecoder(r.Body).Decode(&request)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			id, err := ksuid.NewRandom()
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			var restaurant = models.Restaurant{
+				Id:          id.String(),
+				Name:        strings.ToLower(request.Name),
+				City:        strings.ToLower(request.City),
+				Owner:       claims.Id,
+				DaysOpen:    request.DaysOpen,
+				Specialties: request.Specialties,
+			}
+			err = repository.InsterNewRestraurant(r.Context(), &restaurant)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusCreated)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(InsterNewRestraurantResponse{
+				Success: true,
+				Message: "Restaurant added successfully ;)",
+			})
+		}
 	}
 }
 
@@ -169,6 +177,31 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 			Restaurants: restaurants,
 		})
 
+	}
+}
+
+func GetMyRestaurantsHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			restaurants, err := repository.GetMyRestaurants(r.Context(), claims.Id)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(GetRestaurantsResponse{
+				Restaurants: restaurants,
+			})
+		}
 	}
 }
 

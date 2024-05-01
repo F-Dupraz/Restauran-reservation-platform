@@ -30,7 +30,11 @@ func (repo *MyPostgresRepo) Close() error {
 func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error {
 	DaysOpen := pq.Array(restaurant.DaysOpen)
 	Specialties := pq.Array(restaurant.Specialties)
-	_, err := repo.db.ExecContext(ctx, "INSERT INTO restaurants (id, name, city, owner, days_open, specialties) VALUES ($1, $2, $3, $4, $5, $6)", restaurant.Id, restaurant.Name, restaurant.City, restaurant.Owner, DaysOpen, Specialties)
+	_, err := repo.db.QueryContext(ctx, "INSERT INTO restaurants (id, name, city, owner, days_open, specialties) VALUES ($1, $2, $3, $4, $5, $6);", restaurant.Id, restaurant.Name, restaurant.City, restaurant.Owner, DaysOpen, Specialties)
+	if err != nil {
+		return err
+	}
+	_, err = repo.db.QueryContext(ctx, "UPDATE users SET owner_of=array_prepend($1, owner_of) WHERE id=$2;", restaurant.Id, restaurant.Owner)
 	return err
 }
 
@@ -142,6 +146,59 @@ func (repo *MyPostgresRepo) GetRestaurantByName(ctx context.Context, name string
 
 func (repo *MyPostgresRepo) GetRestaurantByCity(ctx context.Context, city string, offset int) ([]models.Restaurant, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, days_open, specialties FROM restaurants WHERE city = $1 ORDER BY created_at DESC LIMIT 20 OFFSET $2;", strings.ToLower(city), offset)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var restaurants = []models.Restaurant{}
+
+	for rows.Next() {
+		var restaurant = models.Restaurant{}
+		var res_id string
+		var res_name string
+		var res_city string
+		var res_owner string
+		var res_days sql.NullString
+		var res_spec sql.NullString
+
+		err = rows.Scan(&res_id, &res_name, &res_city, &res_owner, &res_days, &res_spec)
+		if err != nil {
+			return nil, err
+		}
+
+		restaurant.Id = res_id
+		restaurant.Name = res_name
+		restaurant.City = res_city
+		restaurant.Owner = res_owner
+
+		var res_days_stringified = res_days.String
+		res_days_stringified = strings.Replace(res_days.String, "{", "", -1)
+		res_days_stringified = strings.Replace(res_days_stringified, "}", "", -1)
+		restaurant.DaysOpen = strings.Split(res_days_stringified, ",")
+
+		var res_spec_stringified = res_spec.String
+		res_spec_stringified = strings.Replace(res_spec.String, "{", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "}", "", -1)
+		restaurant.Specialties = strings.Split(res_spec_stringified, ",")
+
+		restaurants = append(restaurants, restaurant)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return restaurants, nil
+}
+
+func (repo *MyPostgresRepo) GetMyRestaurants(ctx context.Context, id string) ([]models.Restaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, days_open, specialties FROM restaurants WHERE owner = $1 ORDER BY created_at DESC;", id)
 	if err != nil {
 		return nil, err
 	}
