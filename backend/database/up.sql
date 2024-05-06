@@ -5,7 +5,7 @@ CREATE TABLE users (
   username VARCHAR(50) UNIQUE NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(100) NOT NULL,
-  owner_of VARCHAR(100)[],
+  owner_of VARCHAR(50)[],
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS restaurants;
 CREATE TABLE restaurants (
   id VARCHAR(50) UNIQUE NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
-  owner VARCHAR(255) NOT NULL REFERENCES users(id),
+  owner VARCHAR(50) NOT NULL REFERENCES users(id),
   city VARCHAR(100) NOT NULL,
   days_open VARCHAR(100)[],
   capacity INT[],

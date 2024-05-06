@@ -18,6 +18,7 @@ type InsterNewRestraurantRequest struct {
 	Name        string   `json:"name"`
 	City        string   `json:"city"`
 	DaysOpen    []string `json:"days_open"`
+	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`
 }
 
@@ -48,6 +49,7 @@ type UpdateRestraurantRequest struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
 	DaysOpen    []string `json:"days_open"`
+	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`
 }
 
@@ -93,6 +95,7 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 				City:        strings.ToLower(request.City),
 				Owner:       claims.Id,
 				DaysOpen:    request.DaysOpen,
+				Capacity:    request.Capacity,
 				Specialties: request.Specialties,
 			}
 			err = repository.InsterNewRestraurant(r.Context(), &restaurant)
@@ -226,6 +229,7 @@ func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
 				Id:          request.Id,
 				Name:        strings.ToLower(request.Name),
 				DaysOpen:    request.DaysOpen,
+				Capacity:    request.Capacity,
 				Specialties: request.Specialties,
 			}
 			err = repository.UpdateRestaurant(r.Context(), &updated_restaurant, claims.Id)
