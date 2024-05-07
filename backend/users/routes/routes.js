@@ -13,7 +13,7 @@ const router = express.Router()
 router.post("/", async (req, res) => {
   try {
     const body = req.body
-    if (!body.email, !body.username, !body.password) {
+    if (!body.email || !body.username || !body.password) {
       res.status(400).json(err)
     }
     let id = uuidv4()
@@ -28,6 +28,11 @@ router.post("/", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body
+    if (!email || !password) {
+      return res.status(400).json({
+        error: "Username or password is not specified",
+      })
+    }
     const user = await pool.query("SELECT id, email, username, password FROM users WHERE email = $1;", [email])
     if (!user) {
       return res.status(400).json({
@@ -45,7 +50,7 @@ router.post("/login", async (req, res) => {
     const token = await new SignJWT({ id: user.rows[0].id, username: user.rows[0].username })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("2h")
+        .setExpirationTime("2days")
         .sign(new TextEncoder().encode(process.env.JWT_TOKEN))
 
     return res.status(200).json({ username: user.rows[0].username, token: token, })
@@ -69,6 +74,11 @@ router.get("/", async (req, res) => {
 router.get("/username", async (req, res) => {
   try {
     const username = req.body.username
+    if (!username) {
+      return res.status(400).json({
+        error: "Username not specified",
+      })
+    }
     const user_by_username = await pool.query("SELECT id, email, username, owner_of FROM users WHERE username = $1;", [username])
     res.status(200).json(user_by_username.rows[0])
   } catch(err) {
