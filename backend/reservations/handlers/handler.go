@@ -68,6 +68,10 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
+			if request.Day == "" || request.RestaurantId == "" || request.UserId == "" || request.NumGuests == 0 || request.NumGuests < 0 {
+				http.Error(w, "Bad request. Maybe you forgot an argument.", http.StatusBadRequest)
+				return
+			}
 			id, err := ksuid.NewRandom()
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -113,6 +117,10 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
+			if request.Day == "" || request.NumGuests == 0 || request.NumGuests < 0 || request.Id == "" {
+				http.Error(w, "Bad request. Maybe you forgot an argument.", http.StatusBadRequest)
+				return
+			}
 			var reservation = models.Reservation{
 				Id:        request.Id,
 				Day:       request.Day,
@@ -148,6 +156,10 @@ func GetReservationByIdHandler(s server.Server) http.HandlerFunc {
 			err := json.NewDecoder(r.Body).Decode(&request)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if request.Id == "" {
+				http.Error(w, "Bad request. Maybe you forgot the id.", http.StatusBadRequest)
 				return
 			}
 			reservation, err := repository.GetReservationById(r.Context(), request.Id, claims.Id)
