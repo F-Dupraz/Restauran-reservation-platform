@@ -89,6 +89,14 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+			if len(request.Capacity) == 0 || request.Name == "" || len(request.DaysOpen) == 0 || request.City == "" {
+				http.Error(w, "You insert a bad request. Maybe you forgot an argument.", http.StatusBadRequest)
+				return
+			}
+			if len(request.DaysOpen) != len(request.Capacity) {
+				http.Error(w, "There are a different number of days than capacity.", http.StatusBadRequest)
+				return
+			}
 			var restaurant = models.Restaurant{
 				Id:          id.String(),
 				Name:        strings.ToLower(request.Name),
@@ -143,6 +151,10 @@ func GetRestaurantByNameHandler(s server.Server) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		if request.Name == "" {
+			http.Error(w, "You forgot the Name", http.StatusBadRequest)
+			return
+		}
 		var name = request.Name
 		var offset = request.Offset
 		restaurants, err := repository.GetRestaurantByName(r.Context(), name, offset)
@@ -165,6 +177,10 @@ func GetRestaurantByCityHandler(s server.Server) http.HandlerFunc {
 		err := json.NewDecoder(r.Body).Decode(&request)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		if request.City == "" {
+			http.Error(w, "You forgot the City", http.StatusBadRequest)
 			return
 		}
 		var city = request.City
@@ -225,6 +241,14 @@ func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
+			if len(request.Capacity) == 0 || request.Name == "" || len(request.DaysOpen) == 0 {
+				http.Error(w, "You insert a bad request. Maybe you forgot an argument.", http.StatusBadRequest)
+				return
+			}
+			if len(request.DaysOpen) != len(request.Capacity) {
+				http.Error(w, "There are a different number of days than capacity.", http.StatusBadRequest)
+				return
+			}
 			var updated_restaurant = models.Restaurant{
 				Id:          request.Id,
 				Name:        strings.ToLower(request.Name),
@@ -262,6 +286,10 @@ func DeleteRestaurantHandler(s server.Server) http.HandlerFunc {
 			err := json.NewDecoder(r.Body).Decode(&request)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if request.Id == "" {
+				http.Error(w, "You forgot the Id", http.StatusBadRequest)
 				return
 			}
 			var id = request.Id
