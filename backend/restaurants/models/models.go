@@ -7,6 +7,8 @@ type Restaurant struct {
 	Name        string   `json:"name"`
 	City        string   `json:"city"`
 	Owner       string   `json:"owner"`
+	Address     string   `json:"address"`
+	Description string   `json:"description"`
 	DaysOpen    []string `json:"days_open"`
 	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`

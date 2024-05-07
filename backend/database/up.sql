@@ -15,6 +15,8 @@ CREATE TABLE restaurants (
   id VARCHAR(50) UNIQUE NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   owner VARCHAR(50) NOT NULL REFERENCES users(id),
+  address VARCHAR(255) NOT NULL,
+  description TEXT,
   city VARCHAR(100) NOT NULL,
   days_open VARCHAR(100)[],
   capacity INT[],

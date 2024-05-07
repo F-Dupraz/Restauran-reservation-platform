@@ -39,3 +39,6 @@ FOR EACH ROW EXECUTE FUNCTION update_users();
 
 CREATE TRIGGER update_restaurant_capacity_on_inserted_reservation AFTER INSERT ON reservations
 FOR EACH ROW EXECUTE FUNCTION update_restaurant_capacity();
+
+CREATE TRIGGER update_restaurant_capacity_on_inserted_reservation AFTER UPDATE ON reservations
+FOR EACH ROW EXECUTE FUNCTION update_restaurant_capacity();

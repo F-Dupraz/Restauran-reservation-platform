@@ -17,6 +17,8 @@ type InsterNewRestraurantRequest struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
 	City        string   `json:"city"`
+	Address     string   `json:"address"`
+	Description string   `json:"description"`
 	DaysOpen    []string `json:"days_open"`
 	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`
@@ -48,6 +50,7 @@ type GetRestaurantsResponse struct {
 type UpdateRestraurantRequest struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
+	Description string   `json:"description"`
 	DaysOpen    []string `json:"days_open"`
 	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`
@@ -89,7 +92,7 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			if len(request.Capacity) == 0 || request.Name == "" || len(request.DaysOpen) == 0 || request.City == "" {
+			if len(request.Capacity) == 0 || request.Name == "" || request.Description == "" || request.Address == "" || len(request.DaysOpen) == 0 || request.City == "" {
 				http.Error(w, "You insert a bad request. Maybe you forgot an argument.", http.StatusBadRequest)
 				return
 			}
@@ -101,6 +104,8 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 				Id:          id.String(),
 				Name:        strings.ToLower(request.Name),
 				City:        strings.ToLower(request.City),
+				Address:     strings.ToLower(request.Address),
+				Description: strings.ToLower(request.Description),
 				Owner:       claims.Id,
 				DaysOpen:    request.DaysOpen,
 				Capacity:    request.Capacity,
@@ -241,7 +246,7 @@ func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			if len(request.Capacity) == 0 || request.Name == "" || len(request.DaysOpen) == 0 {
+			if len(request.Capacity) == 0 || request.Name == "" || request.Description == "" || len(request.DaysOpen) == 0 {
 				http.Error(w, "You insert a bad request. Maybe you forgot an argument.", http.StatusBadRequest)
 				return
 			}
@@ -252,6 +257,7 @@ func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
 			var updated_restaurant = models.Restaurant{
 				Id:          request.Id,
 				Name:        strings.ToLower(request.Name),
+				Description: strings.ToLower(request.Description),
 				DaysOpen:    request.DaysOpen,
 				Capacity:    request.Capacity,
 				Specialties: request.Specialties,
