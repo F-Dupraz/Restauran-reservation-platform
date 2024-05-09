@@ -16,10 +16,12 @@ import (
 type InsterNewRestraurantRequest struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
-	City        string   `json:"city"`
 	Address     string   `json:"address"`
 	Description string   `json:"description"`
-	DaysOpen    []string `json:"days_open"`
+	City        string   `json:"city"`
+	DaysOpen    []int    `json:"days_open"`
+	From        []string `json:"from"`
+	To          []string `json:"to"`
 	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`
 }
@@ -51,7 +53,9 @@ type UpdateRestraurantRequest struct {
 	Id          string   `json:"id"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
-	DaysOpen    []string `json:"days_open"`
+	DaysOpen    []int    `json:"days_open"`
+	From        []string `json:"from"`
+	To          []string `json:"to"`
 	Capacity    []int    `json:"capacity"`
 	Specialties []string `json:"specialties"`
 }
@@ -100,16 +104,25 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, "There are a different number of days than capacity.", http.StatusBadRequest)
 				return
 			}
+			if len(request.From) != len(request.To) {
+				http.Error(w, "There are a different number of working hours.", http.StatusBadRequest)
+				return
+			}
+			var WorkingHoursArr []string
+			for i, v := range request.From {
+				WorkingHoursArr = append(WorkingHoursArr, "["+v+", "+request.To[i]+"]")
+			}
 			var restaurant = models.Restaurant{
-				Id:          id.String(),
-				Name:        strings.ToLower(request.Name),
-				City:        strings.ToLower(request.City),
-				Address:     strings.ToLower(request.Address),
-				Description: strings.ToLower(request.Description),
-				Owner:       claims.Id,
-				DaysOpen:    request.DaysOpen,
-				Capacity:    request.Capacity,
-				Specialties: request.Specialties,
+				Id:           id.String(),
+				Name:         strings.ToLower(request.Name),
+				City:         strings.ToLower(request.City),
+				Address:      strings.ToLower(request.Address),
+				Description:  strings.ToLower(request.Description),
+				Owner:        claims.Id,
+				DaysOpen:     request.DaysOpen,
+				WorkingHours: WorkingHoursArr,
+				Capacity:     request.Capacity,
+				Specialties:  request.Specialties,
 			}
 			err = repository.InsterNewRestraurant(r.Context(), &restaurant)
 			if err != nil {
@@ -254,13 +267,22 @@ func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, "There are a different number of days than capacity.", http.StatusBadRequest)
 				return
 			}
+			if len(request.From) != len(request.To) {
+				http.Error(w, "There are a different number of working hours.", http.StatusBadRequest)
+				return
+			}
+			var WorkingHoursArr []string
+			for i, v := range request.From {
+				WorkingHoursArr = append(WorkingHoursArr, v+request.To[i])
+			}
 			var updated_restaurant = models.Restaurant{
-				Id:          request.Id,
-				Name:        strings.ToLower(request.Name),
-				Description: strings.ToLower(request.Description),
-				DaysOpen:    request.DaysOpen,
-				Capacity:    request.Capacity,
-				Specialties: request.Specialties,
+				Id:           request.Id,
+				Name:         strings.ToLower(request.Name),
+				Description:  strings.ToLower(request.Description),
+				DaysOpen:     request.DaysOpen,
+				WorkingHours: WorkingHoursArr,
+				Capacity:     request.Capacity,
+				Specialties:  request.Specialties,
 			}
 			err = repository.UpdateRestaurant(r.Context(), &updated_restaurant, claims.Id)
 			if err != nil {

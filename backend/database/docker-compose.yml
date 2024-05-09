@@ -11,6 +11,7 @@ services:
     ports:
       - "5000:5432"
     volumes:
-      - ./up.sql:/docker-entrypoint-initdb.d/1.sql
-      - ./triggers.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./types.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./up.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./triggers.sql:/docker-entrypoint-initdb.d/3.sql
 

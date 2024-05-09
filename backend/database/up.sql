@@ -18,7 +18,8 @@ CREATE TABLE restaurants (
   address VARCHAR(255) NOT NULL,
   description TEXT,
   city VARCHAR(100) NOT NULL,
-  days_open VARCHAR(100)[],
+  days_open INT[],
+  working_hours timerange[],
   capacity INT[],
   specialties VARCHAR(255)[],
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -30,7 +31,9 @@ CREATE TABLE reservations (
   id VARCHAR(50) UNIQUE NOT NULL PRIMARY KEY,
   user_id VARCHAR(50) NOT NULL REFERENCES users(id),
   restaurant_id VARCHAR(50) NOT NULL REFERENCES restaurants(id),
-  day VARCHAR(100) NOT NULL,
+  day INT[] NOT NULL,
+  h_from TIME NOT NULL,
+  h_to TIME NOT NULL,
   num_guests INT NOT NULL,
   is_done BOOLEAN DEFAULT false,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

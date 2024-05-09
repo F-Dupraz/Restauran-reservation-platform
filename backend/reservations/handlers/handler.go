@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/segmentio/ksuid"
@@ -18,6 +20,8 @@ type CreateNewReservationRequest struct {
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
 	Day          string `json:"day"`
+	From         string `json:"from"`
+	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`
 }
 
@@ -30,6 +34,8 @@ type CreateNewReservationResponse struct {
 type UpdateReservationRequest struct {
 	Id        string `json:"id"`
 	Day       string `json:"day"`
+	From      string `json:"from"`
+	To        string `json:"to"`
 	NumGuests int    `json:"num_guests"`
 }
 
@@ -46,7 +52,9 @@ type GetReservationByIdResponse struct {
 	Id           string `json:"id"`
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
-	Day          string `json:"day"`
+	Day          [1]int `json:"day"`
+	From         string `json:"from"`
+	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`
 	IsDone       bool   `json:"is_done"`
 }
@@ -68,7 +76,7 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			if request.Day == "" || request.RestaurantId == "" || request.UserId == "" || request.NumGuests == 0 || request.NumGuests < 0 {
+			if request.RestaurantId == "" || request.UserId == "" || request.NumGuests == 0 || request.NumGuests < 0 {
 				http.Error(w, "Bad request. Maybe you forgot an argument.", http.StatusBadRequest)
 				return
 			}
@@ -77,11 +85,19 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
+			DayOfTheWeek := DayParsed.Weekday()
+			fmt.Println(DayOfTheWeek)
+			fmt.Println(int(DayOfTheWeek))
+			var DayOfTheWeekArr = [1]int{int(DayOfTheWeek)}
+
 			var reservation = models.Reservation{
 				Id:           id.String(),
 				UserId:       claims.Id,
 				RestaurantId: request.RestaurantId,
-				Day:          request.Day,
+				Day:          DayOfTheWeekArr,
+				From:         request.From,
+				To:           request.To,
 				NumGuests:    request.NumGuests,
 			}
 			err = repository.CreateNewReservation(r.Context(), &reservation)
@@ -121,9 +137,15 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, "Bad request. Maybe you forgot an argument.", http.StatusBadRequest)
 				return
 			}
+			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
+			DayOfTheWeek := DayParsed.Weekday()
+			fmt.Println(DayOfTheWeek)
+			fmt.Println(int(DayOfTheWeek))
+			var DayOfTheWeekArr = [1]int{int(DayOfTheWeek)}
+
 			var reservation = models.Reservation{
 				Id:        request.Id,
-				Day:       request.Day,
+				Day:       DayOfTheWeekArr,
 				NumGuests: request.NumGuests,
 			}
 			err = repository.UpdateReservation(r.Context(), &reservation, claims.Id)
