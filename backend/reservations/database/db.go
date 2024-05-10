@@ -38,6 +38,11 @@ func (repo *MyPostgresRepo) UpdateReservation(ctx context.Context, reservation *
 	return err
 }
 
+func (repo *MyPostgresRepo) DeleteReservation(ctx context.Context, user_id string, id string) error {
+	_, err := repo.db.QueryContext(ctx, "DELETE FROM reservations WHERE id=$1 AND user_id=$2;", id, user_id)
+	return err
+}
+
 func (repo *MyPostgresRepo) GetReservationById(ctx context.Context, id string) (*models.Reservation, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, user_id, restaurant_id, day, h_from, h_to, num_guests, is_done FROM reservations WHERE id=$1;", id)
 	if err != nil {

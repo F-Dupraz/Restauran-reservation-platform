@@ -44,6 +44,15 @@ type UpdateReservationResponse struct {
 	Message string `json:"message"`
 }
 
+type DeleteReservationRequest struct {
+	Id string `json:"id"`
+}
+
+type DeleteReservationResponse struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
 type GetReservationByIdRequest struct {
 	Id string `json:"id"`
 }
@@ -173,6 +182,42 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 			json.NewEncoder(w).Encode(UpdateReservationResponse{
 				Success: true,
 				Message: "Reservations updated successfully ;)",
+			})
+		}
+	}
+}
+
+func DeleteReservationHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			var request = DeleteReservationRequest{}
+			err := json.NewDecoder(r.Body).Decode(&request)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if request.Id == "" {
+				http.Error(w, "Bad request. Maybe you forgot the id.", http.StatusBadRequest)
+				return
+			}
+			err = repository.DeleteReservation(r.Context(), claims.Id, request.Id)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(DeleteReservationResponse{
+				Success: true,
+				Message: "Reservation deleted correctly",
 			})
 		}
 	}
