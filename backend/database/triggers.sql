@@ -34,18 +34,12 @@ BEGIN
 
         RETURN NEW;
       ELSE
-        DELETE FROM reservations WHERE id=NEW.id;
-
         RETURN "There is not enough capacity to make the reservation";
       END IF;
     ELSE
-      DELETE FROM reservations WHERE id=NEW.id;
-
       RETURN "Error 2";
     END IF;
   ELSE
-    DELETE FROM reservations WHERE id=NEW.id;
-
     RETURN "Error 1";
   END IF;
 END;
@@ -54,8 +48,8 @@ $update_restaurant_capacity$ LANGUAGE plpgsql;
 CREATE TRIGGER update_users_on_inserted_restaurant AFTER INSERT ON restaurants
 FOR EACH ROW EXECUTE FUNCTION update_users();
 
-CREATE TRIGGER update_restaurant_capacity_on_inserted_reservation AFTER INSERT ON reservations
+CREATE TRIGGER update_restaurant_capacity_on_inserted_reservation BEFORE INSERT ON reservations
 FOR EACH ROW EXECUTE FUNCTION update_restaurant_capacity();
 
-CREATE TRIGGER update_restaurant_capacity_on_update_reservation AFTER UPDATE ON reservations
+CREATE TRIGGER update_restaurant_capacity_on_update_reservation BEFORE UPDATE ON reservations
 FOR EACH ROW EXECUTE FUNCTION update_restaurant_capacity();

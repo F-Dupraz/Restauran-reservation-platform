@@ -52,11 +52,24 @@ type GetReservationByIdResponse struct {
 	Id           string `json:"id"`
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
-	Day          [1]int `json:"day"`
+	Day          int    `json:"day"`
 	From         string `json:"from"`
 	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`
 	IsDone       bool   `json:"is_done"`
+}
+
+type GetReservationByDayRequest struct {
+	Day          string `json:"day"`
+	RestaurantId string `json:"restaurant_id"`
+}
+
+type GetReservationByRidRequest struct {
+	RestaurantId string `json:"restaurant_id"`
+}
+
+type GetReservationByDayResponse struct {
+	Reservations []models.Reservation
 }
 
 func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
@@ -89,7 +102,7 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 			DayOfTheWeek := DayParsed.Weekday()
 			fmt.Println(DayOfTheWeek)
 			fmt.Println(int(DayOfTheWeek))
-			var DayOfTheWeekArr = [1]int{int(DayOfTheWeek)}
+			var DayOfTheWeekArr = []int{int(DayOfTheWeek)}
 
 			var reservation = models.Reservation{
 				Id:           id.String(),
@@ -141,11 +154,13 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 			DayOfTheWeek := DayParsed.Weekday()
 			fmt.Println(DayOfTheWeek)
 			fmt.Println(int(DayOfTheWeek))
-			var DayOfTheWeekArr = [1]int{int(DayOfTheWeek)}
+			var DayOfTheWeekArr = []int{int(DayOfTheWeek)}
 
 			var reservation = models.Reservation{
 				Id:        request.Id,
 				Day:       DayOfTheWeekArr,
+				From:      request.From,
+				To:        request.To,
 				NumGuests: request.NumGuests,
 			}
 			err = repository.UpdateReservation(r.Context(), &reservation, claims.Id)
@@ -173,7 +188,7 @@ func GetReservationByIdHandler(s server.Server) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+		if _, ok := token.Claims.(*models.UserToken); ok && token.Valid {
 			var request = GetReservationByIdRequest{}
 			err := json.NewDecoder(r.Body).Decode(&request)
 			if err != nil {
@@ -184,20 +199,98 @@ func GetReservationByIdHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, "Bad request. Maybe you forgot the id.", http.StatusBadRequest)
 				return
 			}
-			reservation, err := repository.GetReservationById(r.Context(), request.Id, claims.Id)
+			reservation, err := repository.GetReservationById(r.Context(), request.Id)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
+
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GetReservationByIdResponse{
 				Id:           reservation.Id,
 				UserId:       reservation.UserId,
 				RestaurantId: reservation.RestaurantId,
-				Day:          reservation.Day,
+				Day:          reservation.Day[0],
+				From:         reservation.From,
+				To:           reservation.To,
 				NumGuests:    reservation.NumGuests,
 				IsDone:       reservation.IsDone,
+			})
+		}
+	}
+}
+
+func GetReservationByDayHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if _, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			var request = GetReservationByDayRequest{}
+			err := json.NewDecoder(r.Body).Decode(&request)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if request.RestaurantId == "" || request.Day[0] == 0 {
+				http.Error(w, "Bad request. Maybe you forgot something.", http.StatusBadRequest)
+				return
+			}
+			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
+			DayOfTheWeek := DayParsed.Weekday()
+			fmt.Println(DayOfTheWeek)
+			fmt.Println(int(DayOfTheWeek))
+			var DayOfTheWeekArr = [1]int{int(DayOfTheWeek)}
+			reservations, err := repository.GetReservationsByDay(r.Context(), DayOfTheWeekArr, request.RestaurantId)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(GetReservationByDayResponse{
+				Reservations: reservations,
+			})
+		}
+	}
+}
+
+func GetReservationsByRidHandler(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if _, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			var request = GetReservationByRidRequest{}
+			err := json.NewDecoder(r.Body).Decode(&request)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if request.RestaurantId == "" {
+				http.Error(w, "Bad request. Maybe you forgot something.", http.StatusBadRequest)
+				return
+			}
+			reservations, err := repository.GetReservationsByRid(r.Context(), request.RestaurantId)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(GetReservationByDayResponse{
+				Reservations: reservations,
 			})
 		}
 	}

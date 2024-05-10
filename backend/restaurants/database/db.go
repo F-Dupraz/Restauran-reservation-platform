@@ -37,7 +37,7 @@ func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant
 }
 
 func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, address, description, description, days_open, working_hours, capacity, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, address, description, days_open, working_hours, capacity, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
 	if err != nil {
 		return nil, err
 	}

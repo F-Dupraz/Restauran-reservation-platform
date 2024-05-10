@@ -273,7 +273,7 @@ func UpdateRestaurantHandler(s server.Server) http.HandlerFunc {
 			}
 			var WorkingHoursArr []string
 			for i, v := range request.From {
-				WorkingHoursArr = append(WorkingHoursArr, v+request.To[i])
+				WorkingHoursArr = append(WorkingHoursArr, "["+v+", "+request.To[i]+"]")
 			}
 			var updated_restaurant = models.Restaurant{
 				Id:           request.Id,

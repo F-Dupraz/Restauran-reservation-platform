@@ -17,6 +17,8 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/api/reservations", handlers.CreateNewReservationHandler(s)).Methods(http.MethodPost)
 	r.HandleFunc("/api/reservations", handlers.UpdateReservationHandler(s)).Methods(http.MethodPatch)
 	r.HandleFunc("/api/reservations", handlers.GetReservationByIdHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/api/reservations/day", handlers.GetReservationByDayHandler(s)).Methods(http.MethodGet)
+	r.HandleFunc("/api/reservations/restaurant-id", handlers.GetReservationsByRidHandler(s)).Methods(http.MethodGet)
 }
 
 func main() {

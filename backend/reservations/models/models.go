@@ -6,7 +6,7 @@ type Reservation struct {
 	Id           string `json:"id"`
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
-	Day          [1]int `json:"day"`
+	Day          []int  `json:"day"`
 	From         string `json:"from"`
 	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`

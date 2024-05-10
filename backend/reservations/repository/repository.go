@@ -9,7 +9,9 @@ import (
 type ReservationRepository interface {
 	CreateNewReservation(ctx context.Context, reservation *models.Reservation) error
 	UpdateReservation(ctx context.Context, reservation *models.Reservation, id string) error
-	GetReservationById(ctx context.Context, id string, user_id string) (*models.Reservation, error)
+	GetReservationById(ctx context.Context, id string) (*models.Reservation, error)
+	GetReservationsByRid(ctx context.Context, restaurant_id string) ([]models.Reservation, error)
+	GetReservationsByDay(ctx context.Context, day [1]int, restaurant_id string) ([]models.Reservation, error)
 }
 
 var reservationImplementation ReservationRepository
@@ -26,6 +28,14 @@ func UpdateReservation(ctx context.Context, reservation *models.Reservation, id 
 	return reservationImplementation.UpdateReservation(ctx, reservation, id)
 }
 
-func GetReservationById(ctx context.Context, id string, user_id string) (*models.Reservation, error) {
-	return reservationImplementation.GetReservationById(ctx, id, user_id)
+func GetReservationById(ctx context.Context, id string) (*models.Reservation, error) {
+	return reservationImplementation.GetReservationById(ctx, id)
+}
+
+func GetReservationsByRid(ctx context.Context, restaurant_id string) ([]models.Reservation, error) {
+	return reservationImplementation.GetReservationsByRid(ctx, restaurant_id)
+}
+
+func GetReservationsByDay(ctx context.Context, day [1]int, restaurant_id string) ([]models.Reservation, error) {
+	return reservationImplementation.GetReservationsByDay(ctx, day, restaurant_id)
 }
