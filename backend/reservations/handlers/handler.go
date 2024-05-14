@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -109,10 +108,7 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				return
 			}
 			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
-			fmt.Println(request.Day)
 			DayOfTheWeek := DayParsed.Weekday()
-			fmt.Println(DayOfTheWeek)
-			fmt.Println(int(DayOfTheWeek))
 			var DayOfTheWeekArr = []int{int(DayOfTheWeek)}
 
 			var reservation = models.Reservation{
@@ -164,8 +160,6 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 			}
 			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
 			DayOfTheWeek := DayParsed.Weekday()
-			fmt.Println(DayOfTheWeek)
-			fmt.Println(int(DayOfTheWeek))
 			var DayOfTheWeekArr = []int{int(DayOfTheWeek)}
 
 			var reservation = models.Reservation{
@@ -293,8 +287,6 @@ func GetReservationByDayHandler(s server.Server) http.HandlerFunc {
 			}
 			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
 			DayOfTheWeek := DayParsed.Weekday()
-			fmt.Println(DayOfTheWeek)
-			fmt.Println(int(DayOfTheWeek))
 			var DayOfTheWeekArr = [1]int{int(DayOfTheWeek)}
 			reservations, err := repository.GetReservationsByDay(r.Context(), DayOfTheWeekArr, request.RestaurantId)
 			if err != nil {
