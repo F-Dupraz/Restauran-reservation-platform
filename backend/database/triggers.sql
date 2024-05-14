@@ -13,34 +13,36 @@ CREATE FUNCTION update_restaurant_capacity()
 RETURNS trigger  AS $update_restaurant_capacity$
 DECLARE 
   i INT;
-  remaining_cap INT;
+  total_guests INT;
+  total_guests_plus_new_res INT;
+  max_capacity INT[];
   working_hours_v timerange[];
   days_open_v INT[];
 BEGIN
-  SELECT array_position(days_open, NEW.day[1]) INTO i FROM restaurants WHERE id=NEW.restaurant_id;
+  SELECT array_position(days_open, NEW.day_int[1]) INTO i FROM restaurants WHERE id=NEW.restaurant_id;
 
-  SELECT capacity[i], working_hours, days_open INTO remaining_cap, working_hours_v, days_open_v FROM restaurants WHERE id=NEW.restaurant_id;
+  SELECT capacity, working_hours, days_open INTO max_capacity, working_hours_v, days_open_v FROM restaurants WHERE id=NEW.restaurant_id;
 
-  remaining_cap := remaining_cap - NEW.num_guests;
+  SELECT count(num_guests) INTO total_guests FROM reservations WHERE day=NEW.day;
+  
+  total_guests := total_guests;
+  total_guests_plus_new_res := total_guests + NEW.num_guests;
+  max_capacity := max_capacity;
   working_hours_v := working_hours_v;
   days_open_v := days_open_v;
 
-  IF days_open_v[i] = NEW.day[1] THEN
+  IF days_open_v[i] = NEW.day_int[1] THEN
     IF working_hours_v[i] @> NEW.h_from AND working_hours_v[i] @> NEW.h_to THEN
-      IF remaining_cap >= 0 THEN 
-        UPDATE restaurants
-        SET capacity[i] = capacity[i] - NEW.num_guests
-        WHERE id=NEW.restaurant_id;
-
+      IF total_guests_plus_new_res < max_capacity[i] OR total_guests_plus_new_res = max_capacity[i] THEN 
         RETURN NEW;
       ELSE
-        RETURN "There is not enough capacity to make the reservation";
+        RAISE EXCEPTION 'Not enough capacity';
       END IF;
     ELSE
-      RETURN "Error 2";
+      RAISE EXCEPTION 'Time out of working hours range';
     END IF;
   ELSE
-    RETURN "Error 1";
+    RAISE EXCEPTION 'Restaurant not open';
   END IF;
 END;
 $update_restaurant_capacity$ LANGUAGE plpgsql;

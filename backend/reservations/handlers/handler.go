@@ -20,6 +20,7 @@ type CreateNewReservationRequest struct {
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
 	Day          string `json:"day"`
+	DayInt       string `json:"day_int"`
 	From         string `json:"from"`
 	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`
@@ -61,7 +62,7 @@ type GetReservationByIdResponse struct {
 	Id           string `json:"id"`
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
-	Day          int    `json:"day"`
+	Day          string `json:"day"`
 	From         string `json:"from"`
 	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`
@@ -108,6 +109,7 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				return
 			}
 			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
+			fmt.Println(request.Day)
 			DayOfTheWeek := DayParsed.Weekday()
 			fmt.Println(DayOfTheWeek)
 			fmt.Println(int(DayOfTheWeek))
@@ -117,7 +119,8 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				Id:           id.String(),
 				UserId:       claims.Id,
 				RestaurantId: request.RestaurantId,
-				Day:          DayOfTheWeekArr,
+				Day:          request.Day,
+				DayInt:       DayOfTheWeekArr,
 				From:         request.From,
 				To:           request.To,
 				NumGuests:    request.NumGuests,
@@ -167,7 +170,8 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 
 			var reservation = models.Reservation{
 				Id:        request.Id,
-				Day:       DayOfTheWeekArr,
+				Day:       request.Day,
+				DayInt:    DayOfTheWeekArr,
 				From:      request.From,
 				To:        request.To,
 				NumGuests: request.NumGuests,
@@ -256,7 +260,7 @@ func GetReservationByIdHandler(s server.Server) http.HandlerFunc {
 				Id:           reservation.Id,
 				UserId:       reservation.UserId,
 				RestaurantId: reservation.RestaurantId,
-				Day:          reservation.Day[0],
+				Day:          reservation.Day,
 				From:         reservation.From,
 				To:           reservation.To,
 				NumGuests:    reservation.NumGuests,

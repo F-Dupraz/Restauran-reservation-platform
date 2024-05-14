@@ -1,12 +1,15 @@
 package models
 
-import "github.com/golang-jwt/jwt"
+import (
+	"github.com/golang-jwt/jwt"
+)
 
 type Reservation struct {
 	Id           string `json:"id"`
 	UserId       string `json:"user_id"`
 	RestaurantId string `json:"restaurant_id"`
-	Day          []int  `json:"day"`
+	Day          string `json:"day"`
+	DayInt       []int  `json:"day_int"`
 	From         string `json:"from"`
 	To           string `json:"to"`
 	NumGuests    int    `json:"num_guests"`

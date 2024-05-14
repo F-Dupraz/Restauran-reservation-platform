@@ -26,15 +26,17 @@ func (repo *MyPostgresRepo) Close() error {
 	return repo.db.Close()
 }
 
+//------------ MANEJAR LOS ERRORES CUANDO POSTGRES ME DEVUELVE UNA EXCEPCIÓN ------------//
+
 func (repo *MyPostgresRepo) CreateNewReservation(ctx context.Context, reservation *models.Reservation) error {
-	Day := pq.Array(reservation.Day)
-	_, err := repo.db.QueryContext(ctx, "INSERT INTO reservations (id, user_id, restaurant_id, day, h_from, h_to, num_guests) VALUES ($1, $2, $3, $4, $5, $6, $7);", reservation.Id, reservation.UserId, reservation.RestaurantId, Day, reservation.From, reservation.To, reservation.NumGuests)
+	DayInt := pq.Array(reservation.DayInt)
+	_, err := repo.db.QueryContext(ctx, "INSERT INTO reservations (id, user_id, restaurant_id, day, day_int, h_from, h_to, num_guests) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);", reservation.Id, reservation.UserId, reservation.RestaurantId, reservation.Day, DayInt, reservation.From, reservation.To, reservation.NumGuests)
 	return err
 }
 
 func (repo *MyPostgresRepo) UpdateReservation(ctx context.Context, reservation *models.Reservation, id string) error {
-	Day := pq.Array(reservation.Day)
-	_, err := repo.db.QueryContext(ctx, "UPDATE reservations SET day=$1, h_from=$2, h_to=$3, num_guests=$4 WHERE id=$5 AND user_id=$6;", Day, reservation.From, reservation.To, reservation.NumGuests, reservation.Id, id)
+	DayInt := pq.Array(reservation.DayInt)
+	_, err := repo.db.QueryContext(ctx, "UPDATE reservations SET day=$1, day_int=$2, h_from=$3, h_to=$4, num_guests=$5 WHERE id=$6 AND user_id=$7;", reservation.Day, DayInt, reservation.From, reservation.To, reservation.NumGuests, reservation.Id, id)
 	return err
 }
 
@@ -56,20 +58,13 @@ func (repo *MyPostgresRepo) GetReservationById(ctx context.Context, id string) (
 		}
 	}()
 
-	var reservation_day pq.Int64Array
-
 	var reservation = models.Reservation{}
 
 	for rows.Next() {
-		err = rows.Scan(&reservation.Id, &reservation.UserId, &reservation.RestaurantId, &reservation_day, &reservation.From, &reservation.To, &reservation.NumGuests, &reservation.IsDone)
+		err = rows.Scan(&reservation.Id, &reservation.UserId, &reservation.RestaurantId, &reservation.Day, &reservation.From, &reservation.To, &reservation.NumGuests, &reservation.IsDone)
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err
-	}
-
-	reservation.Day = make([]int, len(reservation_day))
-	for i, v := range reservation_day {
-		reservation.Day[i] = int(v)
 	}
 
 	return &reservation, nil
@@ -98,17 +93,13 @@ func (repo *MyPostgresRepo) GetReservationsByDay(ctx context.Context, day [1]int
 		var res_rid string
 		var res_from string
 		var res_to string
-		var res_day pq.Int64Array
+		var res_day string
 		var res_nguest int
 		var res_isdone bool
 
 		err = rows.Scan(&res_id, &res_uid, &res_rid, &res_day, &res_from, &res_to, &res_nguest, &res_isdone)
 
-		reservation.Day = make([]int, len(res_day))
-		for i, v := range res_day {
-			reservation.Day[i] = int(v)
-		}
-
+		reservation.Day = res_day
 		reservation.Id = res_id
 		reservation.UserId = res_uid
 		reservation.RestaurantId = res_rid
@@ -147,17 +138,13 @@ func (repo *MyPostgresRepo) GetReservationsByRid(ctx context.Context, restaurant
 		var res_rid string
 		var res_from string
 		var res_to string
-		var res_day pq.Int64Array
+		var res_day string
 		var res_nguest int
 		var res_isdone bool
 
 		err = rows.Scan(&res_id, &res_uid, &res_rid, &res_day, &res_from, &res_to, &res_nguest, &res_isdone)
 
-		reservation.Day = make([]int, len(res_day))
-		for i, v := range res_day {
-			reservation.Day[i] = int(v)
-		}
-
+		reservation.Day = res_day
 		reservation.Id = res_id
 		reservation.UserId = res_uid
 		reservation.RestaurantId = res_rid
