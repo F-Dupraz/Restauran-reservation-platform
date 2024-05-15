@@ -90,11 +90,51 @@ router.patch("/", authenticate({ throwOnError: true }), async (req, res) => {
   try {
     const body = req.body
     if (!body.username, !body.owner_of) {
-      res.status(400).json(err)
+      res.status(400).json("Bad request. Maybe you forgot something.")
     }
     const updated_user = await pool.query("UPDATE users SET owner_of=$1 WHERE username=$2;", [body.owner_of, body.username])
     res.status(200).json("User updated successfully")
   } catch (err) {
+    res.status(500).json(err)
+  }
+})
+
+router.get("/reservations", authenticate({ throwOnError: true }), async (req, res) => {
+  try {
+    const user = req.body.id
+    if (!user) {
+      res.status(400).json("Bad request. Maybe you forgot something.")
+    }
+    const my_reservations = await pool.query("SELECT day, h_from, h_to, num_guests FROM reservations WHERE user_id=$1", [user])
+    res.status(200).json(my_reservations.rows)
+  } catch(err) {
+    res.status(500).json(err)
+  }
+})
+
+router.get("/restaurants", authenticate({ throwOnError: true }), async (req, res) => {
+  try {
+    const user = req.body.id
+    if (!user) {
+      res.status(400).json("Bad request. Maybe you forgot something.")
+    }
+    const my_restaurants = await pool.query("SELECT name, city, address, description, days_open, working_hours, capacity, specialties FROM restaurants WHERE owner=$1", [user])
+
+    let parsed_restaurants = my_restaurants.rows.map(row => {
+      let wh_string = row.working_hours.replace(/{/g, "")
+        .replace(/}/g, "")
+        .replace(/\[/g, "")
+        .replace(/]/g, "")
+        .replace(/\\/g, "")
+        .replace(/"/g, "")
+      let working_hours = wh_string.split(",")
+
+      return { name: row.name, city: row.city, address: row.address, description: row.description, days_open: row.days_open, working_hours: working_hours, capacity: row.capacity, specialties: row.specialties }
+    })
+
+    res.status(200).json(parsed_restaurants)
+  } catch(err) {
+    console.log(err)
     res.status(500).json(err)
   }
 })
