@@ -9,6 +9,7 @@ import {
 import HomePage from './pages/HomePage/HomePage'
 import CreateUser from './pages/CreateUser/CreateUser'
 import ErrorPage from './pages/Error/ErrorPage'
+import Login from './pages/Login/Login'
 
 import './index.css'
 
@@ -21,6 +22,11 @@ const router = createBrowserRouter([
   {
     path: "/create-account",
     element: <CreateUser />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/login",
+    element: <Login />,
     errorElement: <ErrorPage />
   }
 ])

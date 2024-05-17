@@ -1,4 +1,4 @@
-import './CreateUser.css'
+import './Login.css'
 
 import { useRef } from 'react'
 
@@ -7,17 +7,15 @@ import { Link } from 'react-router-dom'
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
 
-export default function CreateUser() {
-  const username = useRef(null)
+export default function Login() {
   const email = useRef(null)
   const password = useRef(null)
 
   const submitData = () => {
-    if(!username.current.value || !email.current.value || !password.current.value) {
-      alert("Tienes que completar todos los campos si quieres crear un usuario.")
+    if(!email.current.value || !password.current.value) {
+      alert("Tienes que completar todos los campos si quieres iniciar sesión.")
     } else {
       const data = {
-        username: username.current.value,
         email: email.current.value,
         password: password.current.value
       }
@@ -29,14 +27,14 @@ export default function CreateUser() {
     <>
     <Header />
 
-    <main className='createuser-main'>
-      <section className='createuser-section'>
-        <h3>Crea tu usuario</h3>
-        <form className="createuser-form" method="post">
-          <label>
-            Username:
-            <input type="text" name="username" id="username" required={true} ref={username} />
-          </label>
+    <main className='login-main'>
+      <section className='login-leftsection'>
+        <p>
+          Descubre los mejores restaurantes y asegúrate de tener tu mesa reservada y lista cuando llegues.<br /><br />
+          Con MesaBook, explorar y reservar es rápido y fácil.<br /><br />
+          Inicia sesión ahora y comienza tu experiencia gastronómica sin preocupaciones.<br /><br />
+        </p>
+        <form>
           <label>
             Email:
             <input type="email" name="email" id="email" required={true} ref={email} />
@@ -45,15 +43,14 @@ export default function CreateUser() {
             Password:
             <input type="password" name="password" id="password" required={true} ref={password} />
           </label>
-          <input type="button" id="button" onClick={submitData} value="Crear usuario" />
+          <input type="button" id="login-button" onClick={submitData} value="Iniciar Sesión" />
         </form>
-
         <p>
-          <Link to="/login">¿Ya tienes un usuario?</Link>
+          <i>¿Nuevo en MesaBook? <Link to="/create-account" >Registrate aquí.</Link></i>
         </p>
       </section>
     </main>
-
+    
     <Footer />
     </>
   )

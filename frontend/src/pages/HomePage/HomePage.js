@@ -10,7 +10,7 @@ export default function HomePage() {
     <>
     <Header />
 
-    <main>
+    <main className='main-section'>
       <section className='text-section'>
         <h2>Descubre, Reserva y Disfruta: MesaBook, Tu Guía Gastronómica Definitiva</h2>
         <p>
