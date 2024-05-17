@@ -1,0 +1,13 @@
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+#root {
+  background-color: #F5F5F5;
+}
