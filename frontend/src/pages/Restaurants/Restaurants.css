@@ -1,0 +1,25 @@
+.restaurant-section {
+  width: 70vw;
+  padding: 26px 42px;
+  margin: 24px auto 38px;
+  background-color: #fcfcfc;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
+  border: 0px solid none;
+  border-radius: 5%/2%;
+}
+
+.restaurant-element {
+  width: 100%;
+  padding: 15px 25px;
+  border-bottom: 1px solid #666666;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.restaurant-element h4 {
+  margin: 8px 0px 12px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+}

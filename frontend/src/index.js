@@ -8,8 +8,8 @@ import {
 
 import HomePage from './pages/HomePage/HomePage'
 import CreateUser from './pages/CreateUser/CreateUser'
+import Restaurants from './pages/Restaurants/Restaurants'
 import ErrorPage from './pages/Error/ErrorPage'
-import Login from './pages/Login/Login'
 
 import './index.css'
 
@@ -25,8 +25,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: "/login",
-    element: <Login />,
+    path: "/restaurants",
+    element: <Restaurants />,
     errorElement: <ErrorPage />
   }
 ])

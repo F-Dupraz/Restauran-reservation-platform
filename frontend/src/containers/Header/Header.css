@@ -3,7 +3,7 @@ header {
   max-width: 100%;
   height: 16.66vh;
   max-height: 75px;
-  background-color: #ffb01e;
+  background-color: #ff8800;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -32,4 +32,112 @@ header {
 .header-login-div a:hover {
   color: #FFFFFF;
   border-bottom: 2px solid #FFFFFF;
+}
+
+.login-section {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+  width: 50vw;
+  height: 60vh;
+  padding: 60px 40px 0px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0px solid none;
+  border-radius: 100px/20%;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.4);
+  text-align: center;
+}
+
+.login-section h3 {
+  color: #0080ff;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.login-section p {
+  width: 100%;
+  margin-top: 50px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-section p i {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.login-section p i a {
+  color: #0066cd;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.login-section p i a:hover {
+  border-bottom: 2px solid #0066cd;
+}
+
+.login-section form { 
+  width: 90%;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0px solid none;
+  padding: 10px;
+}
+
+.login-section form label {
+  margin: 20px 0px 0px 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;  
+  color: #000000;
+  font-size: 16px;
+  text-decoration: none;
+  text-align: left;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.login-section form label input {
+  margin: 5px 0px 0px -2px;
+  padding: 7px 12px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+
+#login-button {
+  width: 200px;
+  margin: 30px auto 0px;
+  padding: 8px 16px;
+  border: 4px solid #6933d5;
+  border-radius: 15px;
+  color: #FCFCFC;
+  background-color: #6933d5;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#login-button:hover {
+  transition: 0.25s;
+  cursor: pointer;
+  border-radius: 15px;
+  color: #6933d5;
+  background-color: #FCFCFC;
 }
