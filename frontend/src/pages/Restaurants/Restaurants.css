@@ -5,16 +5,22 @@
   background-color: #fcfcfc;
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.3);
   border: 0px solid none;
-  border-radius: 5%/2%;
+  border-radius: 100px/2%;
 }
 
 .restaurant-element {
   width: 100%;
-  padding: 15px 25px;
+  margin-top: 25px;
+  padding: 0px 25px 15px;
   border-bottom: 1px solid #666666;
   font-size: 16px;
   font-weight: 400;
   font-family: 'Open Sans', sans-serif;
+}
+
+.restaurant-element a {
+  color: #000000;
+  text-decoration: none;
 }
 
 .restaurant-element h4 {

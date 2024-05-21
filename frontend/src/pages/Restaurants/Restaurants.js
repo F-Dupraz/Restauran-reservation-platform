@@ -1,8 +1,6 @@
 import './Restaurants.css'
 
-// import { useRef } from 'react'
-
-// import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
@@ -15,130 +13,184 @@ export default function Restaurants() {
       <main>
         <section className='restaurant-section'>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
           <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
-          </div>
-          <div className='restaurant-element'>
-            <h4>Nombre del restaurante</h4>
-            <p>Ciudad</p>
-            <p>Adress</p>
-            <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+            <Link to=":id">
+              <h4>Nombre del restaurante</h4>
+              <p>Ciudad</p>
+              <p>Adress</p>
+              <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+              <p><i>id</i></p>
+            </Link>
           </div>
         </section>
       </main>
