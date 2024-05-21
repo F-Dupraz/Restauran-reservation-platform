@@ -1,0 +1,110 @@
+.createrestaurant-main {
+  width: 100vw;
+  min-height: 76.66vh;
+  display: flex;
+  background-color: #e7e7e7;
+  justify-content: center;
+  align-items: center;
+} 
+
+.createrestaurant-section {
+  width: 70vw;
+  min-height: 50vh;
+  margin: 25px;
+  padding: 60px 40px 60px;
+  background-color: #fcfcfc;
+  display: flex;
+  flex-direction: column;
+  border: 0px solid none;
+  border-radius: 50px;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.4);
+  color: #000000;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.createrestaurant-section h3 {
+  margin-bottom: 25px;
+  color: #0080ff;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.createrestaurant-section label {
+  margin: 20px 0px 0px 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #000000;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.createrestaurant-section  label input {
+  margin: 5px 0px 0px -2px;
+  padding: 7px 12px;
+}
+
+#description {
+  min-height: 50px;
+}
+
+.createrestaurant-days {
+  margin: 20px 0px 0px 2px; 
+}
+
+.createrestaurant-days div  {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.createrestaurant-days div div label {
+  margin: 0px 0px 0px 5px;
+}
+
+.createrestaurant-days div div input {
+  width: 18px;
+  height: 18px;
+  margin-left: 5px;
+}
+
+
+.createrestaurant-h div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.createrestaurant-h div input {
+  width: 10%;
+}
+
+.createrestaurant-h_h div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.createrestaurant-h_h div input {
+  width: 10%;
+}
+
+.createrestaurant-capacity div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.createrestaurant-capacity div input {
+  width: 10%;
+}
+
+#specialities {
+  min-height: 50px;
+}

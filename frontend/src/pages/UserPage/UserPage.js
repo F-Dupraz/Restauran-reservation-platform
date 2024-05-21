@@ -19,24 +19,29 @@ export default function UserPage() {
           </div>
           <div className='userpage-restaurants'>
             <h3>Mis Restaurantes</h3>
-            <div className='userpage-restaurant'>
-              <Link to="/restaurants/:id">
-                <h4>Nombre</h4>
-                <p><i>id</i></p>
-              </Link>
+            <div className='userpage-restaurant-container'>
+              <div className='userpage-restaurant'>
+                <Link to="/restaurants/:id">
+                  <h4>Nombre</h4>
+                  <p><i>id</i></p>
+                </Link>
+              </div>
+              <div className='userpage-restaurant'>
+                <Link to="/restaurants/:id">
+                  <h4>Nombre</h4>
+                  <p><i>id</i></p>
+                </Link>
+              </div>
+              <div className='userpage-restaurant'>
+                <Link to="/restaurants/:id">
+                  <h4>Nombre</h4>
+                  <p><i>id</i></p>
+                </Link>
+              </div>
             </div>
-            <div className='userpage-restaurant'>
-              <Link to="/restaurants/:id">
-                <h4>Nombre</h4>
-                <p><i>id</i></p>
-              </Link>
-            </div>
-            <div className='userpage-restaurant'>
-              <Link to="/restaurants/:id">
-                <h4>Nombre</h4>
-                <p><i>id</i></p>
-              </Link>
-            </div>
+            <p className='userpage-restaurants-p'>
+              <Link to="/new-restaurant">Añadir Restaurante</Link>
+            </p>
           </div>
           <div className='userpage-reservations'>
             <h3>Mis Reservas</h3>

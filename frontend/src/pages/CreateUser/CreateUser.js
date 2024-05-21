@@ -49,7 +49,7 @@ export default function CreateUser() {
         </form>
 
         <p>
-          <Link to="/login">¿Ya tienes un usuario?</Link>
+          <Link to="/">¿Ya tienes un usuario?</Link>
         </p>
       </section>
     </main>

@@ -9,7 +9,10 @@ import {
 import HomePage from './pages/HomePage/HomePage'
 import CreateUser from './pages/CreateUser/CreateUser'
 import Restaurants from './pages/Restaurants/Restaurants'
+import RestaurantPage from './pages/RestaurantPage/RestaurantPage'
 import UserPage from './pages/UserPage/UserPage'
+import CreateReservation from './pages/CreateReservation/CreateReservation'
+import CreateRestaurant from './pages/CreateRestaurant/CreateRestaurant'
 import ErrorPage from './pages/Error/ErrorPage'
 
 import './index.css'
@@ -26,8 +29,23 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
+    path: "/new-restaurant",
+    element: <CreateRestaurant />,
+    errorElement: <ErrorPage />
+  },
+  {
     path: "/restaurants",
     element: <Restaurants />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/restaurants/:id",
+    element: <RestaurantPage />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: "/new-reservation",
+    element: <CreateReservation />,
     errorElement: <ErrorPage />
   },
   {

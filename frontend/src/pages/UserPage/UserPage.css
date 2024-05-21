@@ -46,11 +46,27 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+.userpage-restaurants-p {
+  margin-top: 25px;
+}
+
+.userpage-restaurants p a {
+  color: #0066cd;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.userpage-restaurants p a:hover {
+  border-bottom: 2px solid #0066cd;
+}
+
 .userpage-restaurant {
   margin-left: 5px;
 }
 
-.userpage-restaurant a {
+.userpage-restaurant-container a {
   color: #000000;
   text-decoration: none;
   margin-left: 5px;
@@ -59,8 +75,9 @@
   font-family: 'Open Sans', sans-serif;
 }
 
-.userpage-restaurant a p i {
+.userpage-restaurant-container a p i {
   color: #808080;
+  font-weight: 300;
 }
 
 .userpage-reservations {
@@ -91,4 +108,5 @@
 
 .userpage-reservation a p i {
   color: #808080;
+  font-weight: 300;
 }
