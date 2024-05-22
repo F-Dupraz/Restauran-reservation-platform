@@ -1,0 +1,140 @@
+.reservationpage-main {
+  width: 100vw;
+  min-height: 76.66vh;
+  display: flex;
+  background-color: #e7e7e7;
+  justify-content: center;
+  align-items: center;
+} 
+
+.reservationpage-section {
+  width: 70vw;
+  min-height: 50vh;
+  margin: 25px;
+  padding: 60px 40px 60px;
+  background-color: #fcfcfc;
+  display: flex;
+  align-items: center;
+  border: 0px solid none;
+  border-radius: 50px;
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+.reservationpage-section p {
+  margin: 10px 0px 0px 5px;
+  color: #000000;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.reservationpage-section h3 {
+  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#edit-reservation-button {
+  min-width: 207px;
+  margin: 20px auto 0px;
+  padding: 8px 16px;
+  border: 4px solid #6933d5;
+  border-radius: 15px;
+  color: #FCFCFC;
+  background-color: #6933d5;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#edit-reservation-button:hover {
+  transition: 0.25s;
+  cursor: pointer;
+  border-radius: 15px;
+  color: #6933d5;
+  background-color: #FCFCFC;
+}
+
+#delete-reservation-button {
+  min-width: 200px;
+  margin: 20px auto 0px;
+  padding: 8px 16px;
+  border: 4px solid #6933d5;
+  border-radius: 15px;
+  color: #FCFCFC;
+  background-color: #6933d5;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#delete-reservation-button:hover {
+  transition: 0.25s;
+  cursor: pointer;
+  border-radius: 15px;
+  color: #6933d5;
+  background-color: #FCFCFC;
+}
+
+.reservationpage-form-div {
+  position: absolute;
+  top: -200%;
+  width: 50%;
+}
+
+.reservationpage-section div {
+  width: 30%;
+} 
+
+.reservationpage-form-div form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.reservationpage-form-div form label {
+  margin: 20px 0px 0px 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: #000000;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 500;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.reservationpage-form-div form label input {
+  width: 150px;
+  margin: 5px 0px 0px -2px;
+  padding: 7px 12px;
+}
+
+#reservation-button {
+  min-width: 200px;
+  margin: 20px auto 0px;
+  padding: 8px 16px;
+  border: 4px solid #6933d5;
+  border-radius: 15px;
+  color: #FCFCFC;
+  background-color: #6933d5;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#reservation-button:hover {
+  transition: 0.25s;
+  cursor: pointer;
+  border-radius: 15px;
+  color: #6933d5;
+  background-color: #FCFCFC;
+}

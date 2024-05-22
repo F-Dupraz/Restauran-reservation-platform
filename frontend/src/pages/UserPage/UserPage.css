@@ -63,7 +63,9 @@
 }
 
 .userpage-restaurant {
-  margin-left: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin: 25px 0px 0px 5px;
 }
 
 .userpage-restaurant-container a {
@@ -78,6 +80,14 @@
 .userpage-restaurant-container a p i {
   color: #808080;
   font-weight: 300;
+}
+
+.editrestaurant-link {
+  margin-right: 25px;
+  color: #0066cd !important;
+  text-decoration: none !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
 }
 
 .userpage-reservations {

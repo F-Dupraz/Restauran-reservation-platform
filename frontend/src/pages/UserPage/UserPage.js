@@ -25,17 +25,26 @@ export default function UserPage() {
                   <h4>Nombre</h4>
                   <p><i>id</i></p>
                 </Link>
-              </div>
-              <div className='userpage-restaurant'>
-                <Link to="/restaurants/:id">
-                  <h4>Nombre</h4>
-                  <p><i>id</i></p>
+                <Link to="/edit-restaurants/:id" className='editrestaurant-link'>
+                  Editar
                 </Link>
               </div>
               <div className='userpage-restaurant'>
                 <Link to="/restaurants/:id">
                   <h4>Nombre</h4>
                   <p><i>id</i></p>
+                </Link>
+                <Link to="/edit-restaurants/:id" className='editrestaurant-link'>
+                  Editar
+                </Link>
+              </div>
+              <div className='userpage-restaurant'>
+                <Link to="/restaurants/:id">
+                  <h4>Nombre</h4>
+                  <p><i>id</i></p>
+                </Link>
+                <Link to="/edit-restaurants/:id" className='editrestaurant-link'>
+                  Editar
                 </Link>
               </div>
             </div>

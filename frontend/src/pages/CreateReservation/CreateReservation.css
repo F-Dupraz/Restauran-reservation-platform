@@ -53,7 +53,7 @@
   padding: 7px 12px;
 }
 
-#button {
+#res-button {
   width: 200px;
   margin: 20px auto 0px;
   padding: 8px 16px;
@@ -68,7 +68,7 @@
   font-family: 'Open Sans', sans-serif;
 }
 
-#button:hover {
+#res-button:hover {
   transition: 0.25s;
   cursor: pointer;
   border-radius: 15px;

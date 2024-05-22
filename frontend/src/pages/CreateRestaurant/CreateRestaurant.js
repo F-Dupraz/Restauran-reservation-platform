@@ -2,8 +2,6 @@ import './CreateRestaurant.css'
 
 import { useRef } from 'react'
 
-// import { Link } from 'react-router-dom'
-
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
 
@@ -12,6 +10,10 @@ export default function CreateRestaurant() {
   const city = useRef(null)
   const address = useRef(null)
   const description = useRef(null)
+
+  const submitData = () => {
+    console.log("Submit restaurant")
+  }
 
   return (
     <>
@@ -102,6 +104,7 @@ export default function CreateRestaurant() {
         Especialidades:
         <input type='text' name='specialities' id='specialities' required={true} />
       </label>
+      <input type='button' className='submit-button' onClick={submitData} name='createrestaurant-button' id='createrestaurant-button' value='Crear Restaurante' /> 
       </section>
     </main>
 
