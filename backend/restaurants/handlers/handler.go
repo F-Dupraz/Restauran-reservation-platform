@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/golang-jwt/jwt"
@@ -29,10 +30,6 @@ type InsterNewRestraurantRequest struct {
 type InsterNewRestraurantResponse struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-}
-
-type GetAllRestaurantRequest struct {
-	Offset int `json:"offset"`
 }
 
 type GetRestaurantByNameRequest struct {
@@ -141,13 +138,11 @@ func InsterNewRestraurantHandler(s server.Server) http.HandlerFunc {
 
 func GetAllRestaurants(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var request = GetAllRestaurantRequest{}
-		err := json.NewDecoder(r.Body).Decode(&request)
+		offsetParam := r.URL.Query().Get("offset")
+		offset, err := strconv.Atoi(offsetParam)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+			offset = 0
 		}
-		var offset = request.Offset
 		restaurants, err := repository.GetAllRestaurants(r.Context(), offset)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -7,10 +7,6 @@ import Footer from '../../containers/Footer/Footer'
 
 export default function RestaurantPage() {
 
-  const setRestaurantId = () => {
-    localStorage.setItem('restaurant_id', 'id')
-  }
-
   return (
     <>
       <Header />
@@ -25,7 +21,7 @@ export default function RestaurantPage() {
           <p>Día 1, Día 2, Día 3, Día 4</p>
           <p>[20:00, 24:00], [20:00, 24:00], [17:00, 24:00], [17:00, 24:00]</p>
           <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
-          <p className='Reservation-button'><Link onClick={setRestaurantId} to="/new-reservation">Reservar</Link></p>
+          <p className='Reservation-button'><Link to="/new-reservation">Reservar</Link></p>
         </section>
       </main>
 

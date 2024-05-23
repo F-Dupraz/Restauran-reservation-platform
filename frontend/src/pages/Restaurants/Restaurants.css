@@ -29,3 +29,20 @@
   font-weight: 700;
   font-family: 'Open Sans', sans-serif;
 }
+
+.restaurant-element p {
+  margin-top: 5px;
+}
+
+.restaurant-element p i {
+  color: #6f6f6f;
+}
+
+.restaurant-element-specialties {
+  display: flex;
+  width: 100%;
+}
+
+.restaurant-element-specialties p {
+  margin-right: 5px;
+}
