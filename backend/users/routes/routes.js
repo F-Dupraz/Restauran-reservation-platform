@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
     }
     let id = uuidv4()
     let hashed_password = await hashPassword(body.password)
-    const new_user = await pool.query("INSERT INTO users (id, username, email, password, owner_of) VALUES ($1, $2, $3, $4, $5);", [id, body.username, body.email, hashed_password, body.owner_of])
+    const new_user = await pool.query("INSERT INTO users (id, username, email, password) VALUES ($1, $2, $3, $4);", [id, body.username, body.email, hashed_password])
     res.status(201).json("User inserted successfully")
   } catch(err) {
     res.status(500).json(err)
@@ -86,22 +86,9 @@ router.get("/username", async (req, res) => {
   }
 })
 
-router.patch("/", authenticate({ throwOnError: true }), async (req, res) => {
-  try {
-    const body = req.body
-    if (!body.username, !body.owner_of) {
-      res.status(400).json("Bad request. Maybe you forgot something.")
-    }
-    const updated_user = await pool.query("UPDATE users SET owner_of=$1 WHERE username=$2;", [body.owner_of, body.username])
-    res.status(200).json("User updated successfully")
-  } catch (err) {
-    res.status(500).json(err)
-  }
-})
-
 router.get("/reservations", authenticate({ throwOnError: true }), async (req, res) => {
   try {
-    const user = req.body.id
+    const user = req.user.rows[0].id
     if (!user) {
       res.status(400).json("Bad request. Maybe you forgot something.")
     }
@@ -114,7 +101,7 @@ router.get("/reservations", authenticate({ throwOnError: true }), async (req, re
 
 router.get("/restaurants", authenticate({ throwOnError: true }), async (req, res) => {
   try {
-    const user = req.body.id
+    const user = req.user.rows[0].id
     if (!user) {
       res.status(400).json("Bad request. Maybe you forgot something.")
     }

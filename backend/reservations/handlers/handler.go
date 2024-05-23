@@ -98,7 +98,7 @@ func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			if request.RestaurantId == "" || request.UserId == "" || request.NumGuests == 0 || request.NumGuests < 0 {
+			if request.RestaurantId == "" || request.NumGuests == 0 || request.NumGuests < 0 {
 				http.Error(w, "Bad request. Maybe you forgot an argument.", http.StatusBadRequest)
 				return
 			}
