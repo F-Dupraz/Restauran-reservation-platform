@@ -36,6 +36,76 @@ func (repo *MyPostgresRepo) InsterNewRestraurant(ctx context.Context, restaurant
 	return err
 }
 
+func (repo *MyPostgresRepo) GetRestaurantById(ctx context.Context, id string) (models.Restaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, address, description, days_open, working_hours, capacity, specialties FROM restaurants WHERE id = $1;", id)
+	if err != nil {
+		return models.Restaurant{}, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var restaurant = models.Restaurant{}
+
+	for rows.Next() {
+		var res_id string
+		var res_name string
+		var res_city string
+		var res_owner string
+		var res_address string
+		var res_des string
+		var res_days pq.Int64Array
+		var res_wh sql.NullString
+		var res_cap pq.Int64Array
+		var res_spec sql.NullString
+
+		err = rows.Scan(&res_id, &res_name, &res_city, &res_owner, &res_address, &res_des, &res_days, &res_wh, &res_cap, &res_spec)
+
+		restaurant.Id = res_id
+		restaurant.Name = res_name
+		restaurant.City = res_city
+		restaurant.Owner = res_owner
+		restaurant.Address = res_address
+		restaurant.Description = res_des
+
+		restaurant.Capacity = make([]int, len(res_cap))
+		for i, v := range res_cap {
+			restaurant.Capacity[i] = int(v)
+		}
+
+		var res_wh_stringified = res_wh.String
+		res_wh_stringified = strings.Replace(res_wh.String, "{", "", -1)
+		res_wh_stringified = strings.Replace(res_wh_stringified, "}", "", -1)
+		res_wh_stringified = strings.Replace(res_wh_stringified, "[", "", -1)
+		res_wh_stringified = strings.Replace(res_wh_stringified, "]", "", -1)
+		res_wh_stringified = strings.Replace(res_wh_stringified, "\\", "", -1)
+		res_wh_stringified = strings.Replace(res_wh_stringified, "\"", "", -1)
+		restaurant.WorkingHours = strings.Split(res_wh_stringified, ",")
+
+		restaurant.DaysOpen = make([]int, len(res_days))
+		for i, v := range res_days {
+			restaurant.DaysOpen[i] = int(v)
+		}
+
+		var res_spec_stringified = res_spec.String
+		res_spec_stringified = strings.Replace(res_spec.String, "{", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "}", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "\\", "", -1)
+		res_spec_stringified = strings.Replace(res_spec_stringified, "\"", "", -1)
+		restaurant.Specialties = strings.Split(res_spec_stringified, ",")
+	}
+
+	if err = rows.Err(); err != nil {
+		return models.Restaurant{}, err
+	}
+
+	return restaurant, nil
+}
+
 func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, address, description, days_open, working_hours, capacity, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
 	if err != nil {

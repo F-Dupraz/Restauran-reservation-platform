@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/mux"
 	"github.com/segmentio/ksuid"
 
 	"github.com/F-Dupraz/Restauran-reservation-platform.git/models"
@@ -44,6 +45,10 @@ type GetRestaurantByCityRequest struct {
 
 type GetRestaurantsResponse struct {
 	Restaurants []models.Restaurant `json:"restaurants"`
+}
+
+type GetRestaurantResponse struct {
+	Restaurant models.Restaurant `json:"restaurant"`
 }
 
 type UpdateRestraurantRequest struct {
@@ -152,6 +157,23 @@ func GetAllRestaurants(s server.Server) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(GetRestaurantsResponse{
 			Restaurants: restaurants,
+		})
+	}
+}
+
+func GetRestaurantById(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+		restaurant, err := repository.GetRestaurantById(r.Context(), id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(GetRestaurantResponse{
+			Restaurant: restaurant,
 		})
 	}
 }

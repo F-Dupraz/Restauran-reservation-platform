@@ -1,11 +1,42 @@
 import './RestaurantPage.css'
 
+import { useState, useEffect } from 'react'
+
 import { Link } from 'react-router-dom'
 
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
 
+import capitalizeFirstLetterOfEachWord from '../../helpers/capitalizeFunction.js'
+import IntToDay from '../../helpers/intToDay.js'
+
+import GetRestaurantById from '../../api/GetRestaurantById'
+
 export default function RestaurantPage() {
+
+  const getRestaurantId = () => {
+    return localStorage.getItem('restaurant_id')
+  }
+
+  const [restaurant, setRestaurant] = useState([])
+
+  const [daysOpen, setDaysOpen] = useState([])
+  const [workingHours, setWorkingHours] = useState([])
+  const [Specialties, setSpecialties] = useState([])
+
+  useEffect(() => {
+    const fetchRestaurant = async () => {
+      const res_id = getRestaurantId()
+      const restaurantResponse = await GetRestaurantById(res_id)
+      setRestaurant(restaurantResponse)
+
+      setDaysOpen(restaurantResponse.days_open)
+      setWorkingHours(restaurantResponse.working_hours)
+      setSpecialties(restaurantResponse.specialties)
+    }
+
+    fetchRestaurant()
+  }, [])
 
   return (
     <>
@@ -13,14 +44,14 @@ export default function RestaurantPage() {
 
       <main className='Restaurantpage-main'>
         <section className='Restaurantpage-section'>
-          <h3>Nombre del restaurante</h3>
-          <p><i>id</i></p>
-          <p>Ciudad</p>
-          <p>Dirección</p>
-          <p>Descripción: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ultrices purus quis cursus congue. Integer in urna pharetra, lacinia quam id, cursus est. Donec eleifend, velit scelerisque volutpat imperdiet, neque dui rutrum turpis, a euismod tortor augue in ligula. Integer ac odio posuere, iaculis est et, cursus nisl. Ut malesuada.</p>
-          <p>Día 1, Día 2, Día 3, Día 4</p>
-          <p>[20:00, 24:00], [20:00, 24:00], [17:00, 24:00], [17:00, 24:00]</p>
-          <p>Especialidad 1, Especialidad 2, Especialidad 3</p>
+          <h3>{capitalizeFirstLetterOfEachWord(restaurant.name)}</h3>
+          <p><i>{restaurant.id}</i></p>
+          <p>{capitalizeFirstLetterOfEachWord(restaurant.city) + "."}</p>
+          <p>{capitalizeFirstLetterOfEachWord(restaurant.address) + "."}</p>
+          <p>{restaurant.description}</p>
+          <p>{daysOpen.map((day, index) => { if(index == daysOpen.length - 1) { return (IntToDay(day) + ".") } else { return (IntToDay(day) + ", ") } })}</p>
+          <p>{workingHours.map((wh, index) => { if(index % 2 == 0) { return (wh + "-") } else { return (wh + ". ") } })}</p>
+          <p>{Specialties.map((speciality, index) => { if(index == Specialties.length - 1) { return (capitalizeFirstLetterOfEachWord(speciality) + ".") } else { return (capitalizeFirstLetterOfEachWord(speciality) + ", ") } })}</p>
           <p className='Reservation-button'><Link to="/new-reservation">Reservar</Link></p>
         </section>
       </main>

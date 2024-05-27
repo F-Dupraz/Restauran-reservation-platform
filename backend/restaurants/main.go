@@ -18,6 +18,7 @@ func BindRoutes(s server.Server, r *mux.Router) {
 	r.HandleFunc("/api/restaurants", handlers.DeleteRestaurantHandler(s)).Methods(http.MethodDelete)
 	r.HandleFunc("/api/restaurants", handlers.UpdateRestaurantHandler(s)).Methods(http.MethodPatch)
 	r.HandleFunc("/api/restaurants", handlers.GetAllRestaurants(s)).Methods(http.MethodGet)
+	r.HandleFunc("/api/restaurants/{id}", handlers.GetRestaurantById(s)).Methods(http.MethodGet)
 	r.HandleFunc("/api/restaurants/name", handlers.GetRestaurantByNameHandler(s)).Methods(http.MethodGet)
 	r.HandleFunc("/api/restaurants/city", handlers.GetRestaurantByCityHandler(s)).Methods(http.MethodGet)
 }
