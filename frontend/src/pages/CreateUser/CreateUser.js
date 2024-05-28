@@ -7,12 +7,14 @@ import { Link } from 'react-router-dom'
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
 
+import PostUser from '../../api/PostUser'
+
 export default function CreateUser() {
   const username = useRef(null)
   const email = useRef(null)
   const password = useRef(null)
 
-  const submitData = () => {
+  const submitData = async () => {
     if(!username.current.value || !email.current.value || !password.current.value) {
       alert("Tienes que completar todos los campos si quieres crear un usuario.")
     } else {
@@ -21,7 +23,8 @@ export default function CreateUser() {
         email: email.current.value,
         password: password.current.value
       }
-      console.log(data)
+      await PostUser(data)
+      window.location.pathname = "/"
     }
   }
 

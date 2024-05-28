@@ -4,11 +4,13 @@ import { useRef, useState } from 'react'
 
 import { Link } from 'react-router-dom'
 
+import LoginUser from '../../api/LoginUser'
+
 export default function Header() {
   const email = useRef(null)
   const password = useRef(null)
 
-  const submitData = () => {
+  const submitData = async () => {
     if(!email.current.value || !password.current.value) {
       alert("Tienes que completar todos los campos si quieres iniciar sesión.")
     } else {
@@ -16,7 +18,10 @@ export default function Header() {
         email: email.current.value,
         password: password.current.value
       }
-      console.log(data)
+      const my_data = await LoginUser(data)
+      localStorage.setItem('my_token', my_data.token)
+      localStorage.setItem('my_username', my_data.username)
+      window.location.pathname = "/restaurants"
     }
   }
 
@@ -31,6 +36,9 @@ export default function Header() {
       transition: '1s ease-out'
     })
   }
+
+  const my_token = localStorage.getItem('my_token')
+  const my_username = localStorage.getItem('my_username')
 
   return (
     <>
@@ -57,7 +65,13 @@ export default function Header() {
           <h1>MesaBook</h1>
         </div>
         <div className='header-login-div'>
-          <Link onClick={displayLogin}>Log In</Link>
+          {
+            my_token ? (
+              <p>{my_username}</p>
+            ) : (
+              <Link onClick={displayLogin}>Log In</Link>
+            )
+          }
         </div>
       </header>
     </>
