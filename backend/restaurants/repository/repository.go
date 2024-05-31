@@ -9,6 +9,7 @@ import (
 type RestaurantRepository interface {
 	InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) error
 	GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error)
+	GetMyRestaurants(ctx context.Context, user_id string) ([]models.MyRestaurant, error)
 	GetRestaurantById(ctx context.Context, id string) (models.Restaurant, error)
 	GetRestaurantByName(ctx context.Context, name string, offset int) ([]models.Restaurant, error)
 	GetRestaurantByCity(ctx context.Context, city string, offset int) ([]models.Restaurant, error)
@@ -29,6 +30,10 @@ func InsterNewRestraurant(ctx context.Context, restaurant *models.Restaurant) er
 
 func GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error) {
 	return restaurantImplementation.GetAllRestaurants(ctx, offset)
+}
+
+func GetMyRestaurants(ctx context.Context, user_id string) ([]models.MyRestaurant, error) {
+	return restaurantImplementation.GetMyRestaurants(ctx, user_id)
 }
 
 func GetRestaurantById(ctx context.Context, id string) (models.Restaurant, error) {

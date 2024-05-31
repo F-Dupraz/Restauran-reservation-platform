@@ -71,9 +71,9 @@ router.get("/", async (req, res) => {
   }
 })
 
-router.get("/username", async (req, res) => {
+router.get("/:username", async (req, res) => {
   try {
-    const username = req.body.username
+    const username = req.params.username
     if (!username) {
       return res.status(400).json({
         error: "Username not specified",
@@ -82,46 +82,6 @@ router.get("/username", async (req, res) => {
     const user_by_username = await pool.query("SELECT id, email, username, owner_of FROM users WHERE username = $1;", [username])
     res.status(200).json(user_by_username.rows[0])
   } catch(err) {
-    res.status(500).json(err)
-  }
-})
-
-router.get("/reservations", authenticate({ throwOnError: true }), async (req, res) => {
-  try {
-    const user = req.user.rows[0].id
-    if (!user) {
-      res.status(400).json("Bad request. Maybe you forgot something.")
-    }
-    const my_reservations = await pool.query("SELECT day, h_from, h_to, num_guests FROM reservations WHERE user_id=$1", [user])
-    res.status(200).json(my_reservations.rows)
-  } catch(err) {
-    res.status(500).json(err)
-  }
-})
-
-router.get("/restaurants", authenticate({ throwOnError: true }), async (req, res) => {
-  try {
-    const user = req.user.rows[0].id
-    if (!user) {
-      res.status(400).json("Bad request. Maybe you forgot something.")
-    }
-    const my_restaurants = await pool.query("SELECT name, city, address, description, days_open, working_hours, capacity, specialties FROM restaurants WHERE owner=$1", [user])
-
-    let parsed_restaurants = my_restaurants.rows.map(row => {
-      let wh_string = row.working_hours.replace(/{/g, "")
-        .replace(/}/g, "")
-        .replace(/\[/g, "")
-        .replace(/]/g, "")
-        .replace(/\\/g, "")
-        .replace(/"/g, "")
-      let working_hours = wh_string.split(",")
-
-      return { name: row.name, city: row.city, address: row.address, description: row.description, days_open: row.days_open, working_hours: working_hours, capacity: row.capacity, specialties: row.specialties }
-    })
-
-    res.status(200).json(parsed_restaurants)
-  } catch(err) {
-    console.log(err)
     res.status(500).json(err)
   }
 })

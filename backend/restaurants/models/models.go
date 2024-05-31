@@ -15,6 +15,11 @@ type Restaurant struct {
 	Specialties  []string `json:"specialties"`
 }
 
+type MyRestaurant struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
+
 type UserToken struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`

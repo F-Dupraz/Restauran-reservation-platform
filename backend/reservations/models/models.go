@@ -16,6 +16,12 @@ type Reservation struct {
 	IsDone       bool   `json:"is_done"`
 }
 
+type MyReservation struct {
+	Id      string `json:"id"`
+	Day     string `json:"day"`
+	ResName string `json:"restaurant_name"`
+}
+
 type UserToken struct {
 	Id       string `json:"id"`
 	Username string `json:"username"`

@@ -70,6 +70,47 @@ func (repo *MyPostgresRepo) GetReservationById(ctx context.Context, id string) (
 	return &reservation, nil
 }
 
+func (repo *MyPostgresRepo) GetMyReservations(ctx context.Context, user_id string) ([]models.MyReservation, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT reservations.id, day, name FROM reservations INNER JOIN restaurants ON reservations.restaurant_id = restaurants.id WHERE reservations.user_id = $1;", user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var reservations = []models.MyReservation{}
+
+	for rows.Next() {
+		var reservation = models.MyReservation{}
+
+		var res_id string
+		var res_day string
+		var res_name string
+
+		err = rows.Scan(&res_id, &res_day, &res_name)
+		if err != nil {
+			return nil, err
+		}
+
+		reservation.Id = res_id
+		reservation.Day = res_day
+		reservation.ResName = res_name
+
+		reservations = append(reservations, reservation)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return reservations, nil
+}
+
 func (repo *MyPostgresRepo) GetReservationsByDay(ctx context.Context, day [1]int, restaurant_id string) ([]models.Reservation, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, user_id, restaurant_id, day, h_from, h_to, num_guests, is_done FROM reservations WHERE day[1]=$1 AND restaurant_id=$2;", day[0], restaurant_id)
 	if err != nil {

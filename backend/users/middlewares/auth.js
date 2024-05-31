@@ -4,6 +4,7 @@ const { TextEncoder } = require("util")
 const pool = require("../database/db")
 
 const verifyToken = async (req) => {
+  console.log(req)
   const { authorization } = req.headers
   const token = (authorization || '').replace('Bearer ', '')
 
@@ -13,8 +14,10 @@ const verifyToken = async (req) => {
       new TextEncoder().encode(process.env.JWT_TOKEN)
     )
 
+    console.log(token)
+
     return verified.payload
-  } catch (e) {
+  } catch (e) { 
     throw new Error('Invalid token')
   }
 }
@@ -26,8 +29,12 @@ const defaultOptions = {
 const authenticate = (options) => async (req, res, next) => {
   const _options = { ...defaultOptions, ...options }
 
+  console.log(_options)
+
   try {
     const payload = await verifyToken(req)
+
+    console.log(payload)
 
     const username = payload.username
     const user = await pool.query("SELECT id, username FROM users WHERE username = $1", [username])
@@ -37,6 +44,9 @@ const authenticate = (options) => async (req, res, next) => {
     }
 
     req.user = user
+
+    console.log(req)
+
     next()
   } catch (e) {
     if (e && e.message) {

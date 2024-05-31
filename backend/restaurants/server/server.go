@@ -52,7 +52,13 @@ func NewServer(ctx context.Context, config *Config) (*Broker, error) {
 func (b *Broker) Start(binder func(s Server, r *mux.Router)) {
 	b.router = mux.NewRouter()
 	binder(b, b.router)
-	handler := cors.Default().Handler(b.router)
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000", "*"},
+		AllowedMethods:   []string{"GET", "POST", "DELETE"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+	})
+	handler := c.Handler(b.router)
 	repo, err := database.NewMyPostgresRepo(b.config.DatabaseURL)
 	if err != nil {
 		log.Fatal(err)

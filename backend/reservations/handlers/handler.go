@@ -81,6 +81,10 @@ type GetReservationByDayResponse struct {
 	Reservations []models.Reservation
 }
 
+type GetMyReservationsResponse struct {
+	MyReservations []models.MyReservation
+}
+
 func CreateNewReservationHandler(s server.Server) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
@@ -297,6 +301,31 @@ func GetReservationByDayHandler(s server.Server) http.HandlerFunc {
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GetReservationByDayResponse{
 				Reservations: reservations,
+			})
+		}
+	}
+}
+
+func GetMyReservations(s server.Server) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tokenString := strings.TrimSpace(r.Header.Get("Authorization"))
+		token, err := jwt.ParseWithClaims(tokenString, &models.UserToken{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config().JWTSecret), nil
+		})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+		if claims, ok := token.Claims.(*models.UserToken); ok && token.Valid {
+			my_reservations, err := repository.GetMyReservations(r.Context(), claims.Id)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(GetMyReservationsResponse{
+				MyReservations: my_reservations,
 			})
 		}
 	}

@@ -11,6 +11,7 @@ type ReservationRepository interface {
 	UpdateReservation(ctx context.Context, reservation *models.Reservation, id string) error
 	DeleteReservation(ctx context.Context, user_id string, id string) error
 	GetReservationById(ctx context.Context, id string) (*models.Reservation, error)
+	GetMyReservations(ctx context.Context, user_id string) ([]models.MyReservation, error)
 	GetReservationsByRid(ctx context.Context, restaurant_id string) ([]models.Reservation, error)
 	GetReservationsByDay(ctx context.Context, day [1]int, restaurant_id string) ([]models.Reservation, error)
 }
@@ -35,6 +36,10 @@ func DeleteReservation(ctx context.Context, user_id string, id string) error {
 
 func GetReservationById(ctx context.Context, id string) (*models.Reservation, error) {
 	return reservationImplementation.GetReservationById(ctx, id)
+}
+
+func GetMyReservations(ctx context.Context, user_id string) ([]models.MyReservation, error) {
+	return reservationImplementation.GetMyReservations(ctx, user_id)
 }
 
 func GetReservationsByRid(ctx context.Context, restaurant_id string) ([]models.Reservation, error) {

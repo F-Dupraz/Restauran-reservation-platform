@@ -106,6 +106,43 @@ func (repo *MyPostgresRepo) GetRestaurantById(ctx context.Context, id string) (m
 	return restaurant, nil
 }
 
+func (repo *MyPostgresRepo) GetMyRestaurants(ctx context.Context, user_id string) ([]models.MyRestaurant, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT id, name FROM restaurants WHERE owner = $1 ORDER BY created_at DESC;", user_id)
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err = rows.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	var restaurants = []models.MyRestaurant{}
+
+	for rows.Next() {
+		var restaurant = models.MyRestaurant{}
+		var res_id string
+		var res_name string
+
+		err = rows.Scan(&res_id, &res_name)
+		if err != nil {
+			return nil, err
+		}
+
+		restaurant.Id = res_id
+		restaurant.Name = res_name
+
+		restaurants = append(restaurants, restaurant)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return restaurants, nil
+}
+
 func (repo *MyPostgresRepo) GetAllRestaurants(ctx context.Context, offset int) ([]models.Restaurant, error) {
 	rows, err := repo.db.QueryContext(ctx, "SELECT id, name, city, owner, address, description, days_open, working_hours, capacity, specialties FROM restaurants ORDER BY created_at DESC LIMIT 20 OFFSET $1;", offset)
 	if err != nil {
