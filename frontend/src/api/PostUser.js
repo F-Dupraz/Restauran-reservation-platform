@@ -8,6 +8,9 @@ export default function PostUser(data) {
       email: data.email,
       username: data.username,
       password: data.password
+    },
+    headers: {
+      "Content-Type": "application/json"
     }
   })
   .then((res) => console.log(res))

@@ -39,9 +39,6 @@ export default function UserPage() {
     }
 
     fetchUser()
-
-    console.log(myRestaurants)
-    console.log(myReservations)
   }, [])
 
   return (
@@ -62,11 +59,11 @@ export default function UserPage() {
                 myRestaurants.map((restaurant, index) => {
                   return (
                     <div className='userpage-restaurant' key={index}>
-                      <Link to="/restaurants/:id">
+                      <Link to={`/restaurants/${restaurant.id}`}>
                         <h4>{capitalizeFirstLetterOfEachWord(restaurant.name)}</h4>
                         <p><i>{restaurant.id}</i></p>
                       </Link>
-                      <Link to="/edit-restaurants/:id" className='editrestaurant-link'>
+                      <Link to={`/edit-restaurants/${restaurant.id}`} className='editrestaurant-link'>
                         Editar
                       </Link>
                     </div>
