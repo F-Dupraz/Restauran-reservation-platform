@@ -14,10 +14,6 @@ import GetRestaurants from '../../api/GetRestaurants.js'
 export default function Restaurants() {
   let offsetParam = 0
 
-  const setRestaurantId = (id) => {
-    localStorage.setItem('restaurant_id', id)
-  }
-
   const [restaurants, setRestaurants] = useState([])
 
   useEffect(() => {
@@ -39,14 +35,18 @@ export default function Restaurants() {
             restaurants.map((restaurant) => {
               return (
                 <div className='restaurant-element' key={restaurant.id}>
-                  <Link to={`${restaurant.id}`} onClick={() => setRestaurantId(restaurant.id)}>
+                  <Link to={`${restaurant.id}`}>
                     <h4>{capitalizeFirstLetterOfEachWord(restaurant.name)}</h4>
                     <p>{capitalizeFirstLetterOfEachWord(restaurant.city)}</p>
                     <p>{capitalizeFirstLetterOfEachWord(restaurant.address)}</p>
                     <div className='restaurant-element-specialties'>
                       {
                         restaurant.specialties.map((speciality, index) => {
-                          return <p key={index}>{capitalizeFirstLetterOfEachWord(speciality)}</p>
+                          if(index == restaurant.specialties.length - 1) {
+                            return <p>{capitalizeFirstLetterOfEachWord(speciality) + "."}</p>
+                          } else {
+                            return <p>{capitalizeFirstLetterOfEachWord(speciality) + ", "}</p>
+                          }
                         })
                       }
                     </div>

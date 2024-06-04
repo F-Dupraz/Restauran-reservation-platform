@@ -1,6 +1,7 @@
 import './EditRestaurantPage.css'
 
 import { useRef } from 'react'
+import { useNavigate } from "react-router-dom";
 
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
@@ -10,6 +11,8 @@ import DeleteRestaurant from '../../api/DeleteRestaurant'
 
 export default function EditRestaurantPage() {
   const my_token = localStorage.getItem("my_token")
+
+  const navigation = useNavigate()
 
   let restaurant_id = String(window.location.href)
   restaurant_id = restaurant_id.split("/")
@@ -92,13 +95,13 @@ export default function EditRestaurantPage() {
         from: from,
         to: to,
         capacity: capacity,
-        specialities: specialities_parsed
+        specialties: specialities_parsed
       }
 
       const response = await EditRestaurant(data, my_token)
       if(response.success) {
         alert(response.message)
-        window.location.pathname = "/userpage"
+        navigation("/")
       } else {
         alert(response)
       }
@@ -113,7 +116,7 @@ export default function EditRestaurantPage() {
     const response = await DeleteRestaurant(data, my_token)
     if(response.success) {
       alert(response.message)
-      window.location.pathname = "/userpage"
+      navigation("/userpage")
     } else {
       alert(response)
     }

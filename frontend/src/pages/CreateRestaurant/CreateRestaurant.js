@@ -1,6 +1,7 @@
 import './CreateRestaurant.css'
 
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
@@ -9,6 +10,8 @@ import PostRestaurant from '../../api/PostRestaurant'
 
 export default function CreateRestaurant() {
   const my_token = localStorage.getItem("my_token")
+
+  const navigation = useNavigate()
 
   const name = useRef(null)
   const city = useRef(null)
@@ -90,13 +93,13 @@ export default function CreateRestaurant() {
         from: from,
         to: to,
         capacity: capacity,
-        specialities: specialities_parsed
+        specialties: specialities_parsed
       }
   
       const response = await PostRestaurant(data, my_token)
       if(response.success) {
         alert(response.message)
-        window.location.pathname = "/restaurants"
+        navigation("/restaurants")
       }
     } 
   }

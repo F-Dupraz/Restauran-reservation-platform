@@ -6,6 +6,10 @@ import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
 
 export default function CreateReservation() {
+  let restaurant_id = String(window.location.href)
+  restaurant_id = restaurant_id.split("/")
+  restaurant_id = restaurant_id[restaurant_id.length - 1]
+
   const date = useRef(null)
   const start_time = useRef(null)
   const end_time = useRef(null)
@@ -17,7 +21,7 @@ export default function CreateReservation() {
     } else {
       const data = {
         user_id: 'id',
-        restaurant_id: localStorage.getItem('restaurant_id'),
+        restaurant_id: restaurant_id,
         date: date.current.value,
         start_time: start_time.current.value,
         end_time: end_time.current.value,

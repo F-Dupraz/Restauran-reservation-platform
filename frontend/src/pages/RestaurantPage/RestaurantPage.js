@@ -13,10 +13,9 @@ import IntToDay from '../../helpers/intToDay.js'
 import GetRestaurantById from '../../api/GetRestaurantById'
 
 export default function RestaurantPage() {
-
-  const getRestaurantId = () => {
-    return localStorage.getItem('restaurant_id')
-  }
+  let restaurant_id = String(window.location.href)
+  restaurant_id = restaurant_id.split("/")
+  restaurant_id = restaurant_id[restaurant_id.length - 1]
 
   const [restaurant, setRestaurant] = useState([])
 
@@ -26,14 +25,15 @@ export default function RestaurantPage() {
 
   useEffect(() => {
     const fetchRestaurant = async () => {
-      const res_id = getRestaurantId()
-      const restaurantResponse = await GetRestaurantById(res_id)
+      const restaurantResponse = await GetRestaurantById(restaurant_id)
+      console.log(restaurantResponse)
       setRestaurant(restaurantResponse)
 
       setDaysOpen(restaurantResponse.days_open)
       setWorkingHours(restaurantResponse.working_hours)
       setSpecialties(restaurantResponse.specialties)
     }
+
 
     fetchRestaurant()
   }, [])

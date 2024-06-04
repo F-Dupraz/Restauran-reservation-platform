@@ -9,7 +9,7 @@ export default function Footer() {
         <ul>
           <li>Mail: duprazfabricio@gmail.com</li>
           <li><Link to="/terms-and-conditions">Terminos y condiciones</Link></li>
-          <li><a href="https://twitter.com/F_Dupraz" target="_blank" rel="noopener noreferrer">Twitter</a></li>
+          <li><a href="https://x.com/fabridupraz" target="_blank" rel="noopener noreferrer">Twitter</a></li>
         </ul>
       </div>
       <div className='footer-thanks'>

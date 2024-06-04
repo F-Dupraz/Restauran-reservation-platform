@@ -1,11 +1,24 @@
 import './HomePage.css'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import isJwtExpired from '../../helpers/getJWT'
 
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
+import { useEffect } from 'react'
 
 export default function HomePage() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const my_token = localStorage.getItem('my_token')
+    
+    if(my_token && !isJwtExpired(my_token)) {
+      navigate("/restaurants")
+    }
+  }, [navigate])
+
   return (
     <>
     <Header />
@@ -25,11 +38,11 @@ export default function HomePage() {
       <section className='create-account-section'>
         <h3>¿Aún no tienes una cuenta?</h3>
         <div>
-          <Link to="/create-account">Crear Cuenta</Link>
+          <Link to="create-account">Crear Cuenta</Link>
         </div>
       </section>
     </main>
-
+    
     <Footer />
     </>
   )
