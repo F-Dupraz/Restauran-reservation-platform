@@ -2,32 +2,43 @@ import './CreateReservation.css'
 
 import { useRef } from 'react'
 
+import { useNavigate } from 'react-router-dom'
+
+import PostReservation from '../../api/PostReservation'
+
 import Header from '../../containers/Header/Header'
 import Footer from '../../containers/Footer/Footer'
 
 export default function CreateReservation() {
+  const navigation = useNavigate()
+
+  const my_token = localStorage.getItem("my_token")
+
   let restaurant_id = String(window.location.href)
   restaurant_id = restaurant_id.split("/")
-  restaurant_id = restaurant_id[restaurant_id.length - 1]
+  restaurant_id = restaurant_id[restaurant_id.length - 2]
 
   const date = useRef(null)
   const start_time = useRef(null)
   const end_time = useRef(null)
   const num_guests = useRef(null)
 
-  const submitData = () => {
+  const submitData = async () => {
     if(!date.current.value || !start_time.current.value || !end_time.current.value || !num_guests.current.value) {
       alert("Tienes que completar todos los campos si quieres crear un usuario.")
     } else {
       const data = {
-        user_id: 'id',
         restaurant_id: restaurant_id,
         date: date.current.value,
-        start_time: start_time.current.value,
-        end_time: end_time.current.value,
-        num_guests: num_guests.current.value,
+        from: start_time.current.value,
+        to: end_time.current.value,
+        num_guests: parseInt(num_guests.current.value),
       }
-      console.log(data)
+      const response = await PostReservation(data, my_token)
+      if(response.success) {
+        alert(response.message)
+        navigation("/restaurants")
+      }
     }
   }
 

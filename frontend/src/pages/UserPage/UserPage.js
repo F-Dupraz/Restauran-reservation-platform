@@ -63,7 +63,7 @@ export default function UserPage() {
                         <h4>{capitalizeFirstLetterOfEachWord(restaurant.name)}</h4>
                         <p><i>{restaurant.id}</i></p>
                       </Link>
-                      <Link to={`/edit-restaurants/${restaurant.id}`} className='editrestaurant-link'>
+                      <Link to={`/restaurants/${restaurant.id}/edit`} className='editrestaurant-link'>
                         Editar
                       </Link>
                     </div>
@@ -81,7 +81,7 @@ export default function UserPage() {
               myReservations.map((reservation, index) => {
                 return (
                   <div className='userpage-reservation' key={index}>
-                    <Link to="/reservations/:id">
+                    <Link to={`/bookings/${reservation.id}`}>
                       <p>{capitalizeFirstLetterOfEachWord(reservation.restaurant_name)}</p>
                       <p>{reservation.day.slice(0,10)}</p>
                       <p><i>{reservation.id}</i></p>

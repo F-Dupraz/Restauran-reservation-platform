@@ -46,17 +46,17 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />
   },
   {
-    path: "/edit-restaurants/:id",
+    path: "/restaurants/:id/edit",
     element: <EditRestaurantPage />,
     errorElement: <ErrorPage />
   },
   {
-    path: "/new-reservation",
+    path: "/restaurants/:id/book",
     element: <CreateReservation />,
     errorElement: <ErrorPage />
   },
   {
-    path: "/reservations/:id",
+    path: "/bookings/:id",
     element: <ReservationPage />,
     errorElement: <ErrorPage />
   },

@@ -52,7 +52,7 @@ export default function RestaurantPage() {
           <p>{daysOpen.map((day, index) => { if(index == daysOpen.length - 1) { return (IntToDay(day) + ".") } else { return (IntToDay(day) + ", ") } })}</p>
           <p>{workingHours.map((wh, index) => { if(index % 2 == 0) { return (wh + "-") } else { return (wh + ". ") } })}</p>
           <p>{Specialties.map((speciality, index) => { if(index == Specialties.length - 1) { return (capitalizeFirstLetterOfEachWord(speciality) + ".") } else { return (capitalizeFirstLetterOfEachWord(speciality) + ", ") } })}</p>
-          <p className='Reservation-button'><Link to="/new-reservation">Reservar</Link></p>
+          <p className='Reservation-button'><Link to={`book`}>Reservar</Link></p>
         </section>
       </main>
 
