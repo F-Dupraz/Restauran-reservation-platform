@@ -45,8 +45,8 @@ func (repo *MyPostgresRepo) DeleteReservation(ctx context.Context, user_id strin
 	return err
 }
 
-func (repo *MyPostgresRepo) GetReservationById(ctx context.Context, id string) (*models.Reservation, error) {
-	rows, err := repo.db.QueryContext(ctx, "SELECT id, user_id, restaurant_id, day, h_from, h_to, num_guests, is_done FROM reservations WHERE id=$1;", id)
+func (repo *MyPostgresRepo) GetReservationById(ctx context.Context, id string) (*models.AReservation, error) {
+	rows, err := repo.db.QueryContext(ctx, "SELECT reservations.id, reservations.day, restaurants.name, reservations.h_from, reservations.h_to, reservations.num_guests FROM reservations INNER JOIN restaurants ON reservations.restaurant_id = restaurants.id WHERE reservations.id = $1;", id)
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +58,10 @@ func (repo *MyPostgresRepo) GetReservationById(ctx context.Context, id string) (
 		}
 	}()
 
-	var reservation = models.Reservation{}
+	var reservation = models.AReservation{}
 
 	for rows.Next() {
-		err = rows.Scan(&reservation.Id, &reservation.UserId, &reservation.RestaurantId, &reservation.Day, &reservation.From, &reservation.To, &reservation.NumGuests, &reservation.IsDone)
+		err = rows.Scan(&reservation.Id, &reservation.Day, &reservation.RestaurantName, &reservation.From, &reservation.To, &reservation.NumGuests)
 	}
 	if err = rows.Err(); err != nil {
 		return nil, err

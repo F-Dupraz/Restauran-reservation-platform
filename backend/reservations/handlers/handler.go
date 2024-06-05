@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/mux"
 	"github.com/segmentio/ksuid"
 
 	"github.com/F-Dupraz/Restauran-reservation-platform/reservations.git/models"
@@ -53,19 +54,14 @@ type DeleteReservationResponse struct {
 	Message string `json:"message"`
 }
 
-type GetReservationByIdRequest struct {
-	Id string `json:"id"`
-}
-
 type GetReservationByIdResponse struct {
-	Id           string `json:"id"`
-	UserId       string `json:"user_id"`
-	RestaurantId string `json:"restaurant_id"`
-	Day          string `json:"day"`
-	From         string `json:"from"`
-	To           string `json:"to"`
-	NumGuests    int    `json:"num_guests"`
-	IsDone       bool   `json:"is_done"`
+	Id             string `json:"id"`
+	UserId         string `json:"user_id"`
+	RestaurantName string `json:"restaurant_name"`
+	Day            string `json:"day"`
+	From           string `json:"from"`
+	To             string `json:"to"`
+	NumGuests      int    `json:"num_guests"`
 }
 
 type GetReservationByDayRequest struct {
@@ -162,6 +158,7 @@ func UpdateReservationHandler(s server.Server) http.HandlerFunc {
 				http.Error(w, "Bad request. Maybe you forgot an argument.", http.StatusBadRequest)
 				return
 			}
+
 			DayParsed, _ := time.Parse(time.DateOnly, request.Day)
 			DayOfTheWeek := DayParsed.Weekday()
 			var DayOfTheWeekArr = []int{int(DayOfTheWeek)}
@@ -236,33 +233,22 @@ func GetReservationByIdHandler(s server.Server) http.HandlerFunc {
 			return
 		}
 		if _, ok := token.Claims.(*models.UserToken); ok && token.Valid {
-			var request = GetReservationByIdRequest{}
-			err := json.NewDecoder(r.Body).Decode(&request)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
-				return
-			}
-			if request.Id == "" {
-				http.Error(w, "Bad request. Maybe you forgot the id.", http.StatusBadRequest)
-				return
-			}
-			reservation, err := repository.GetReservationById(r.Context(), request.Id)
+			vars := mux.Vars(r)
+			id := vars["id"]
+			reservation, err := repository.GetReservationById(r.Context(), id)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-
 			w.WriteHeader(http.StatusOK)
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(GetReservationByIdResponse{
-				Id:           reservation.Id,
-				UserId:       reservation.UserId,
-				RestaurantId: reservation.RestaurantId,
-				Day:          reservation.Day,
-				From:         reservation.From,
-				To:           reservation.To,
-				NumGuests:    reservation.NumGuests,
-				IsDone:       reservation.IsDone,
+				Id:             reservation.Id,
+				RestaurantName: reservation.RestaurantName,
+				Day:            reservation.Day,
+				From:           reservation.From,
+				To:             reservation.To,
+				NumGuests:      reservation.NumGuests,
 			})
 		}
 	}

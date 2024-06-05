@@ -26,14 +26,12 @@ export default function RestaurantPage() {
   useEffect(() => {
     const fetchRestaurant = async () => {
       const restaurantResponse = await GetRestaurantById(restaurant_id)
-      console.log(restaurantResponse)
       setRestaurant(restaurantResponse)
 
       setDaysOpen(restaurantResponse.days_open)
       setWorkingHours(restaurantResponse.working_hours)
       setSpecialties(restaurantResponse.specialties)
     }
-
 
     fetchRestaurant()
   }, [])

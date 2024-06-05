@@ -43,9 +43,9 @@ export default function Restaurants() {
                       {
                         restaurant.specialties.map((speciality, index) => {
                           if(index == restaurant.specialties.length - 1) {
-                            return <p>{capitalizeFirstLetterOfEachWord(speciality) + "."}</p>
+                            return <p key={index}>{capitalizeFirstLetterOfEachWord(speciality) + "."}</p>
                           } else {
-                            return <p>{capitalizeFirstLetterOfEachWord(speciality) + ", "}</p>
+                            return <p key={index}>{capitalizeFirstLetterOfEachWord(speciality) + ", "}</p>
                           }
                         })
                       }

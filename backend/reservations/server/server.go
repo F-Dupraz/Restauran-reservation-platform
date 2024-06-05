@@ -54,7 +54,7 @@ func (b *Broker) Start(binder func(s Server, r *mux.Router)) {
 	binder(b, b.router)
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000", "*"},
-		AllowedMethods:   []string{"GET", "POST", "DELETE"},
+		AllowedMethods:   []string{"GET", "POST", "DELETE", "PATCH"},
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"Authorization", "Content-Type"},
 	})

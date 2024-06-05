@@ -63,10 +63,10 @@
   min-width: 200px;
   margin: 20px auto 0px;
   padding: 8px 16px;
-  border: 4px solid #6933d5;
+  border: 4px solid #ce1515;
   border-radius: 15px;
   color: #FCFCFC;
-  background-color: #6933d5;
+  background-color: #ce1515;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   font-size: 20px;
   text-decoration: none;
@@ -78,7 +78,7 @@
   transition: 0.25s;
   cursor: pointer;
   border-radius: 15px;
-  color: #6933d5;
+  color: #ce1515;
   background-color: #FCFCFC;
 }
 

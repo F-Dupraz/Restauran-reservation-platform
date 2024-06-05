@@ -29,7 +29,7 @@ export default function CreateReservation() {
     } else {
       const data = {
         restaurant_id: restaurant_id,
-        date: date.current.value,
+        day: date.current.value,
         from: start_time.current.value,
         to: end_time.current.value,
         num_guests: parseInt(num_guests.current.value),
