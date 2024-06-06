@@ -16,6 +16,14 @@ export default function Restaurants() {
 
   const [restaurants, setRestaurants] = useState([])
 
+  const handleScroll = async () => {
+    if((document.documentElement.scrollTop + document.documentElement.clientHeight) >= (document.documentElement.scrollHeight - 80)) {
+      offsetParam += 20
+      const restaurantsResponse = await GetRestaurants(offsetParam)
+      setRestaurants(prevRestaurants => [...prevRestaurants, ...restaurantsResponse])
+    }
+  }
+
   useEffect(() => {
     const fetchRestaurants = async () => {
       const restaurantsResponse = await GetRestaurants(offsetParam)
@@ -23,6 +31,8 @@ export default function Restaurants() {
     }
 
     fetchRestaurants()
+
+    document.addEventListener("scroll", handleScroll)
   }, [])
 
   return (

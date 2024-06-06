@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
-    <footer>
+    <footer id="footer">
       <div className='footer-links'>
         <ul>
           <li>Mail: duprazfabricio@gmail.com</li>

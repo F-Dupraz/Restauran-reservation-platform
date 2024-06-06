@@ -8,7 +8,7 @@ export default function PostReservation(data, token) {
       restaurant_id: data.restaurant_id,
       from: data.from,
       to: data.to,
-      day: data.date,
+      day: data.day,
       num_guests: data.num_guests,
     },
     headers: {
