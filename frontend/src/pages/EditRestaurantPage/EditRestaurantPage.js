@@ -16,7 +16,7 @@ export default function EditRestaurantPage() {
 
   let restaurant_id = String(window.location.href)
   restaurant_id = restaurant_id.split("/")
-  restaurant_id = restaurant_id[restaurant_id.length - 1]
+  restaurant_id = restaurant_id[restaurant_id.length - 2]
 
   const name = useRef(null)
   const description = useRef(null)
@@ -112,7 +112,7 @@ export default function EditRestaurantPage() {
     const data = {
       id: restaurant_id
     }
-    
+    console.log(data)
     const response = await DeleteRestaurant(data, my_token)
     if(response.success) {
       alert(response.message)
